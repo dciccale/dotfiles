@@ -18,12 +18,12 @@ set autoread
 set hidden
 " ignore some files when autocomplete
 set wildignore=*.swp,*.bak,*.pyc
-" remove unwanted trailling spaces
-autocmd BufWritePre * :%s/\s\+$//e
 
-" fix spelling mistakes
+" fix my common spelling mistakes
 iab slef self
 iab functino function
+iab getElementByID getElementById
+
 
 " keep selection to (in/out)dent
 vnoremap < <gv
@@ -43,14 +43,16 @@ nnoremap gj j
 set nobackup
 set noswapfile
 
-" vertical splits at right side
+" always do vertical splits at right side
 set splitright
-" horizontal splits below
+" always do horizontal splits below
 set splitbelow
 
 " highlight trailing whitespace
 " http://nvie.com/posts/how-i-boosted-my-vim/
 set list listchars=trail:.,extends:#,nbsp:.
+" remove unwanted trailling spaces
+autocmd BufWritePre * :%s/\s\+$//e
 
 """ SEARCH
 " ignore case when searching
@@ -63,6 +65,8 @@ set hlsearch
 set smartcase
 " use many undos
 set undolevels=1000
+" easy remove search highlight
+nmap <silent> ,0 :nohlsearch<CR>
 
 """ TERMINAL
 " change the current working directory to where the current file is on
@@ -70,12 +74,7 @@ set autochdir
 
 """ FOLDS
 set foldmethod=syntax
-" fold with F9
-inoremap <F9> <C-O>za
-nnoremap <F9> za
-onoremap <F9> <C-C>za
-vnoremap <F9> zf
-" toggle folds with space bat
+" toggle folds with space bar
 nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 vnoremap <Space> zf
 
@@ -91,15 +90,11 @@ nnoremap <silent> <S-F7> :so ~/.vimrc<CR>
 call pathogen#infect()
 call pathogen#helptags()
 
-""" CoffeeScript
+""" CoffeeScript (vim-coffee-script https://github.com/kchmck/vim-coffee-script)
 " auto-compile on save
 au BufWritePost *.coffee silent CoffeeMake!
 " fold by indentation in .coffee files
 au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-
-
-""" SNIPMATE
-":filetype plugin
 
 """ NAVIGATION
 " easy window navigation
@@ -108,22 +103,9 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-""" MAPPINGS
+""" OTHER MAPPINGS
 " change the mapleader from \ to ,
 let mapleader=","
 
-" - is the new : (i.e. -w to save)
+" - is the new : (i.e. -w to save) faster instead of shift+:
 nnoremap - :
-
-" easy remove search highlight
-nmap <silent> ,8 :nohlsearch<CR>
-
-
-
-" Snippets are activated by Shift+Tab
-let g:snippetsEmu_key = "<S-Tab>"
-
-" Tab completion options
-set wildmode=list:longest,list:full
-set complete=.,w,t
-
