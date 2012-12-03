@@ -1,10 +1,15 @@
+""" BUNDLES
+so ~/.vim/plugins.vim
+
 """ EDITION
+syntax on
 set expandtab
 set shiftwidth=2
 set tabstop=2
 set softtabstop=2
 " always set autoindenting on
 set autoindent
+set smartindent
 " copy the previous indentation on autoindenting
 set copyindent
 " don't wrap lines
@@ -21,6 +26,7 @@ set wildignore=*.swp,*.bak,*.pyc
 
 " fix my common spelling mistakes
 iab slef self
+iab tihs this
 iab functino function
 iab getElementByID getElementById
 
@@ -31,6 +37,8 @@ vnoremap > >gv
 
 " easy add new line in normal mode
 nnoremap <CR> o<ESC>
+" easy remove line in normal mode
+nnoremap <BS> dd
 
 " make j/k move to next visual line instead of pysical line
 " http://yubinkim.com/?p=6
@@ -42,6 +50,7 @@ nnoremap gj j
 " do not generate backup nor swap files
 set nobackup
 set noswapfile
+
 
 " always do vertical splits at right side
 set splitright
@@ -67,6 +76,8 @@ set smartcase
 set undolevels=1000
 " easy remove search highlight
 nmap <silent> ,0 :nohlsearch<CR>
+" don't move on *
+nnoremap * *<C-o>
 
 """ TERMINAL
 " change the current working directory to where the current file is on
@@ -75,26 +86,8 @@ set autochdir
 """ FOLDS
 set foldmethod=syntax
 " toggle folds with space bar
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+nnoremap <silent> <Space> za<CR>
 vnoremap <Space> zf
-
-
-""" EASY EDIT/SOURCE VIMRC
-nnoremap <silent> <F7> :e ~/.vimrc<CR>
-nnoremap <silent> <S-F7> :so ~/.vimrc<CR>
-
-
-""" PLUGINS
-
-""" PATHOGEN
-call pathogen#infect()
-call pathogen#helptags()
-
-""" CoffeeScript (vim-coffee-script https://github.com/kchmck/vim-coffee-script)
-" auto-compile on save
-au BufWritePost *.coffee silent CoffeeMake!
-" fold by indentation in .coffee files
-au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 
 """ NAVIGATION
 " easy window navigation
@@ -102,6 +95,9 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+" buffer nav
+nnoremap <Right> :bnext<CR>
+nnoremap <Left>  :bprev<CR>
 
 """ OTHER MAPPINGS
 " change the mapleader from \ to ,
@@ -109,3 +105,11 @@ let mapleader=","
 
 " - is the new : (i.e. -w to save) faster instead of shift+:
 nnoremap - :
+" easy :bd
+map <Leader>d :bd<CR>
+" quick save
+map <Leader>w :w<CR>
+
+""" EASY EDIT/SOURCE VIMRC
+nnoremap <Leader>ev :split $MYVIMRC<CR>
+nnoremap <Leader>sv :so $MYVIMRC<CR>:bd<CR>
