@@ -1,0 +1,33 @@
+[user]
+  name = Denis Ciccale
+  email = dciccale@gmail.com
+
+[core]
+  excludesfile = /Users/Denis/.gitignore
+  editor = mvim -f
+
+[color]
+  ui = true # covers diff = true, status = auto, branch = auto
+  interactive = auto
+
+[merge]
+  tool = mvim -d
+
+[alias]
+  s = status
+  c = commit
+  ch = checkout
+  br = branch
+  p = push
+
+# github url shortcuts
+[url "http://github.com/"]
+  insteadOf = "gh:"
+[url "git@github.com:"]
+  pushInsteadOf = "https://github.com/"
+  pushInsteadOf = "http://github.com/"
+  pushInsteadOf = "gh:"
+[url "git@github.com:dciccale/"]
+  pushInsteadOf = "gd:"
+[url "http://github.com/dciccale/"]
+  insteadOf = "gd:"
