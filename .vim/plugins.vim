@@ -10,11 +10,15 @@ Bundle 'gmarik/vundle'
 " CoffeeScript
 Bundle 'kchmck/vim-coffee-script'
 
-augroup coffee
+augroup coffeescript
+  au!
   " CoffeeLint before compiling
-  au BufWritePre *.coffee silent CoffeeLint! | cwindow | redraw!
+  "au BufWritePre *.coffee silent CoffeeLint! | cwindow | redraw!
+  "
   " auto-compile on save
-  "au BufWritePost *.coffee silent CoffeeMake! | cwindow | redraw!
+  " (disable until come with a way of settin output path)
+  " au BufWritePost *.coffee silent CoffeeMake! | cwindow | redraw!
+  "
   " fold by indentation in .coffee files
   au BufNewFile,BufReadPost *.coffee setlocal foldmethod=indent nofoldenable
 augroup END
@@ -26,6 +30,8 @@ Bundle 'git://git.wincent.com/command-t.git'
 let g:CommandTMatchWindowAtTop = 1
 " show few lines, is fuzzy search no need to read all
 let g:CommandTMaxHeight = 10
+" ctrl+p like sublime
+nnoremap <C-p> :CommandT<CR>
 
 " Snippets
 Bundle 'msanders/snipmate.vim'
@@ -33,5 +39,3 @@ Bundle 'msanders/snipmate.vim'
 Bundle 'wavded/vim-stylus'
 Bundle 'tomasr/molokai'
 Bundle 'digitaltoad/vim-jade'
-
-filetype plugin indent on

@@ -2,6 +2,7 @@
 so ~/.vim/plugins.vim
 
 """ EDITION
+filetype plugin indent on
 syntax on
 set expandtab
 set shiftwidth=2
@@ -30,13 +31,17 @@ iab tihs this
 iab functino function
 iab getElementByID getElementById
 
-
 " keep selection to (in/out)dent
 vnoremap < <gv
 vnoremap > >gv
 
+
+" enter key goes to error in quickfix window
+au BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
+
 " easy add new line in normal mode
 nnoremap <CR> o<ESC>
+
 " easy remove line in normal mode
 nnoremap <BS> dd
 
@@ -111,5 +116,5 @@ map <Leader>d :bd<CR>
 map <Leader>w :w<CR>
 
 """ EASY EDIT/SOURCE VIMRC
-nnoremap <Leader>ev :split $MYVIMRC<CR>
-nnoremap <Leader>sv :so $MYVIMRC<CR>:bd<CR>
+nnoremap <Leader>ve :split $MYVIMRC<CR>
+nnoremap <Leader>vs :so $MYVIMRC<CR>
