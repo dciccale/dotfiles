@@ -24,6 +24,8 @@ set autoread
 set hidden
 " ignore some files when autocomplete
 set wildignore=*.swp,*.bak,*.pyc
+" use many undos
+set undolevels=1000
 
 " fix my common spelling mistakes
 iab slef self
@@ -77,8 +79,6 @@ set incsearch
 set hlsearch
 " ignore case if search pattern is all lowercase, case-sensitive otherwise
 set smartcase
-" use many undos
-set undolevels=1000
 " easy remove search highlight
 nmap <silent> ,0 :nohlsearch<CR>
 " don't move on *
