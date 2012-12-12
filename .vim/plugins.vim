@@ -1,15 +1,13 @@
+" plugins managed by vundle
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" let vundle handle vundle
+" Vundle
 Bundle 'gmarik/vundle'
-
-""" PLUGINS
 
 " CoffeeScript
 Bundle 'kchmck/vim-coffee-script'
-
 augroup coffeescript
   au!
   " CoffeeLint before compiling
@@ -23,7 +21,6 @@ augroup coffeescript
   au BufNewFile,BufReadPost *.coffee setlocal foldmethod=indent nofoldenable
 augroup END
 
-
 " CommandT
 Bundle 'git://git.wincent.com/command-t.git'
 " show window at top
@@ -32,10 +29,35 @@ let g:CommandTMatchWindowAtTop = 1
 let g:CommandTMaxHeight = 10
 " ctrl+p like sublime
 nnoremap <C-p> :CommandT<CR>
+" ctrl+b like sublime
+nnoremap <C-b> :CommandTBuffer<CR>
 
-" Snippets
+" SnipMate
 Bundle 'msanders/snipmate.vim'
 
+" Stylus
 Bundle 'wavded/vim-stylus'
+
+" Molokai theme
 Bundle 'tomasr/molokai'
+colorscheme molokai
+
+" Jade
 Bundle 'digitaltoad/vim-jade'
+
+" SuperTab
+Bundle 'ervandew/supertab'
+
+" Zoom
+nmap <Leader>+ :ZoomIn<CR>
+nmap <Leader>- :ZoomOut<CR>
+nmap <Leader>= :ZoomReset<CR>
+
+" delimitMate
+Bundle 'Raimondi/delimitMate'
+
+" AutoCloseTag
+Bundle 'HTML-AutoCloseTag'
+
+" matchit (extended % matching)
+Bundle 'matchit.zip'
