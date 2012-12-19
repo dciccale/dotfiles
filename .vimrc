@@ -270,9 +270,6 @@ nnoremap <leader>0 :nohls<CR>
 " don't move on *
 nnoremap * *<C-o>
 
-" ctrl+f vim search not gui
-nnoremap <C-f> /
-
 " center search
 nmap n nzz
 nmap N Nzz
