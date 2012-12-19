@@ -1,18 +1,22 @@
 " no vi compatibility
 set nocp
 
+
 " ===================== PLUGINS =====================
+
+" my plugins config file path
 let $MYPLUGINS = '~/.vim/plugins.vim'
 
 " load plugins managed by vundle
 exe 'so '.$MYPLUGINS
 
 
+
 " ===================== GVIMRC =====================
+
 " define gvimrc here
 if has('gui_running')
   if has('mac')
-    set transparency=3
     set guifont=Monaco:h12
   else
     set guifont=Courier_New:h10:cANSI
@@ -20,11 +24,17 @@ if has('gui_running')
 endif
 
 
+
 " ===================== EDITION =====================
+
+" basic edition stuff on
 syntax on
 filetype on
 filetype plugin on
 filetype indent on
+
+" use unix as standard file type
+set fileformats=unix,dos,mac
 
 " always set autoindenting on
 set autoindent
@@ -63,13 +73,15 @@ set hidden
 set list
 set listchars=tab:>-,trail:·
 
-" remove unwanted trailling spaces
-autocmd BufWritePre * :%s/\s\+$//e
-" switch between last two files
-nnoremap <Leader><Leader> <c-^>
+" color trailing whitespace
+highlight TrailWhitespace ctermbg=red guibg=#f62c73
+match TrailWhitespace /\s\+$\| \+\ze\t/
 
-" ignore some files when autocomplete
-set wildignore=*.swp,*.bak,*.pyc
+" autocomplete using tab
+inoremap <expr> <Tab> strpart(getline('.'), col('.') - 2, 1) =~ '\w' ? "\<C-P>" : "\<Tab>"
+
+" switch between last two files
+nnoremap <leader><leader> <c-^>
 
 " use many undos
 set undolevels=1000
@@ -81,11 +93,25 @@ set synmaxcol=800
 vnoremap < <gv
 vnoremap > >gv
 
+" move the cursor when insert mode
+imap <C-h> <C-o>h
+imap <C-j> <C-o>j
+imap <C-k> <C-o>k
+imap <C-l> <C-o>l
+
+" select all
+map <leader>a ggVG
+
 " enter key goes to error in quickfix window
 au BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
 
+" join lines with cursor staying in place
+nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<CR>
+
+
 
 " ===================== SCROLLING =====================
+
 " show more lines around cursor when at the edge of file
 set scrolloff=3
 set sidescrolloff=5
@@ -97,7 +123,9 @@ vnoremap <C-e> 5<C-e>
 vnoremap <C-y> 5<C-y>
 
 
+
 " ===================== SPELLING =====================
+
 " fix my common spelling mistakes
 iab slef self
 iab tihs this
@@ -105,7 +133,9 @@ iab functino function
 iab getElementByID getElementById
 
 
+
 " ===================== REGISTERS =====================
+
 " may be I will do this and keep only one register (system clipboard)
 " anyway I can't keep track of more than one..
 " http://stackoverflow.com/a/1290230/194630
@@ -119,7 +149,9 @@ iab getElementByID getElementById
 "vnoremap P "*P
 
 
+
 " ===================== MAPPINGS =====================
+
 " change the mapleader from \ to ,
 let mapleader=","
 
@@ -127,13 +159,17 @@ let mapleader=","
 nnoremap - :
 
 " easy :bd
-map <Leader>d :bd<CR>
+map <leader>bd :bd<CR>
 
 " quick save
-map <Leader>w :w<CR>
+map <leader>w :w<CR>
+
+" force save
+com! W :w !sudo tee %
+map <leader>W :W<CR>
 
 " quick source current file
-map <Leader>s :so %<CR>
+map <leader>s :so %<CR>
 
 " make j/k move to next visual line instead of pysical line
 " http://yubinkim.com/?p=6
@@ -142,36 +178,80 @@ nnoremap j gj
 nnoremap gk k
 nnoremap gj j
 
-" easy move lines
-nnoremap <A-j> :m+<CR>==
-nnoremap <A-k> :m-2<CR>==
-inoremap <A-j> <Esc>:m+<CR>==gi
-inoremap <A-k> <Esc>:m-2<CR>==gi
-vnoremap <A-j> :m'>+<CR>gv=gv
-vnoremap <A-k> :m-2<CR>gv=gv
+" easy move lines in all modes
+imap <A-j> <ESC>mz:m+<CR>`zi
+imap <A-k> <ESC>mz:m-2<CR>`zi
+nmap <A-j> mz:m+<CR>`z
+nmap <A-k> mz:m-2<CR>`z
+vmap <A-j> :m'>+<CR>`<my`>mzgv`yo`z
+vmap <A-k> :m'<-2<CR>`>my`<mzgv`yo`z
+
+" remap Alt key in Mac (don't use macmeta)
+if has('mac') || has('macunix')
+  imap <D-j> <A-j>
+  imap <D-k> <A-k>
+  nmap <D-j> <A-j>
+  nmap <D-k> <A-k>
+  vmap <D-j> <A-j>
+  vmap <D-k> <A-k>
+endif
 
 " easy add new line in normal mode
-nnoremap <CR> o<ESC>
+nnoremap <CR> o<ESC>k
 
 " easy remove line in normal mode
-" (copy to _ for not loosing the last clipboard)
+" (copy to _ for not loosing the last register)
 nnoremap <BS> "_dd
 
+" easy empty line without going insert mode
+nnoremap <leader>D 0D<ESC>
+
 " easey copy/paste from/to system clipboard
-map <Leader>yy "*y
-map <Leader>pp "*p
-map <Leader>YY "*Y
-map <Leader>PP "*P
+map <leader>yy "*y
+map <leader>pp "*p
+map <leader>YY "*Y
+map <leader>PP "*P
+
 
 
 " ===================== SPLITS =====================
+
 " always do vertical splits at right side
 set splitright
+
 " always do horizontal splits below
 set splitbelow
 
+" reize splits on window resize
+au VimResized * exe "normal! \<c-w>="
+
+" only have cursorline in current window
+autocmd WinLeave * set nocursorline
+autocmd WinEnter * set cursorline
+
+" Max/unmax splits
+nnoremap <C-w>o :call MaximizeToggle()<cr>
+
+function! MaximizeToggle()
+  if exists("s:maximize_session")
+    exec "source " . s:maximize_session
+    call delete(s:maximize_session)
+    unlet s:maximize_session
+    let &hidden=s:maximize_hidden_save
+    unlet s:maximize_hidden_save
+  else
+    let s:maximize_hidden_save = &hidden
+    let s:maximize_session = tempname()
+    set hidden
+    exec "mksession! " . s:maximize_session
+    only
+  endif
+endfunction
+
+
 
 " ===================== SEARCH =====================
+
 " ignore case when searching
 set ignorecase
 
@@ -185,7 +265,7 @@ set incsearch
 set hlsearch
 
 " hide search highlight
-nnoremap <Leader>0 :nohls<CR>
+nnoremap <leader>0 :nohls<CR>
 
 " don't move on *
 nnoremap * *<C-o>
@@ -193,11 +273,26 @@ nnoremap * *<C-o>
 " ctrl+f vim search not gui
 nnoremap <C-f> /
 
+" center search
+nmap n nzz
+nmap N Nzz
+
 " do not highlight when vim starts
 nohls
 
 
+
 " ===================== TERMINAL =====================
+
+" limit textwidth
+set textwidth=120
+
+" wider number width
+set numberwidth=6
+
+" highlight column at 120 chars
+set colorcolumn=120
+
 " disable blinking cursor
 set guicursor=a:blinkon0
 
@@ -205,7 +300,14 @@ set guicursor=a:blinkon0
 set laststatus=2
 
 " my status line
-set statusline=%f\ %m\ %r\ Line\ %l\ \ Column\ %v\ \ Buffer\ #%n
+set statusline=\ #%n\ %F
+set statusline+=\ %m
+set statusline+=\ %r
+set statusline+=Line\ %l\ %P
+set statusline+=\ \ Column\ %c
+set statusline+=%=
+set statusline+=\ [%{&ff}]
+set statusline+=\ %{&ft}
 
 " more space to see command line
 set cmdheight=2
@@ -234,7 +336,9 @@ set shortmess=atI
 set visualbell
 
 
+
 " ===================== FOLDS =====================
+
 set foldmethod=syntax
 
 " do not fold automatically
@@ -242,10 +346,14 @@ set nofoldenable
 
 " toggle folds with space bar
 nnoremap <silent> <Space> za
-vnoremap <Space> zf
+
+" restore messed up vim
+map <F5> :redraw!<CR><c-w>=
+
 
 
 " ===================== NAVIGATION =====================
+
 " easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
@@ -253,22 +361,33 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " easy tab navigation
-map <C-L> :tabNext<CR>
-
-" there is no tabPrev so use next also
-map <C-H> :tabNext<CR>
+map <S-l> :tabnext<CR>
+map <S-h> :tabprevious<CR>
 
 " buffer navigation with arrow keys
 nnoremap <Right> :bnext<CR>
 nnoremap <Left>  :bprev<CR>
 
 
+
+" ===================== AUTOCOMMANDS =====================
+
+" let vim create a template file based on the file type
+autocmd! BufNewFile * silent! 0r $HOME/.vim/template.%:e
+
+" remove unwanted trailling spaces
+autocmd! BufWritePre * :%s/\s\+$//e
+
+
+
 " ===================== EDIT VIMRC =====================
+
 " vimrc
-nmap <Leader>ve :split $MYVIMRC<CR>
-nmap <Leader>vs :so $MYVIMRC<CR>
+nmap <leader>ve :split $MYVIMRC<CR>
+nmap <leader>vs :so $MYVIMRC<CR>
 " plugins.vim
-nmap <Leader>pe :exe 'split '.$MYPLUGINS<CR>
+nmap <leader>pe :exe 'split '.$MYPLUGINS<CR>
+
 
 
 " ===================== SAVE/RESTORE SESSION =====================

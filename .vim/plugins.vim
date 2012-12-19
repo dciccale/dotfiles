@@ -35,23 +35,20 @@ nnoremap <C-b> :CommandTBuffer<CR>
 " SnipMate
 Bundle 'msanders/snipmate.vim'
 
-" Stylus
+" Stylus syntax highlight (doesn't feel is working right)
 Bundle 'wavded/vim-stylus'
 
-" Molokai theme
-Bundle 'tomasr/molokai'
-colorscheme molokai
+" my custom molokai theme (denkai)
+Bundle 'dciccale/denkai.vim'
+colorscheme denkai
 
 " Jade
 Bundle 'digitaltoad/vim-jade'
 
-" SuperTab
-Bundle 'ervandew/supertab'
-
-" Zoom
-nmap <Leader>+ :ZoomIn<CR>
-nmap <Leader>- :ZoomOut<CR>
-nmap <Leader>= :ZoomReset<CR>
+" Zoom (easy increase/decrease vim fontsize)
+nmap <leader>+ :ZoomIn<CR>
+nmap <leader>- :ZoomOut<CR>
+nmap <leader>= :ZoomReset<CR>
 
 " delimitMate
 Bundle 'Raimondi/delimitMate'
@@ -61,3 +58,6 @@ Bundle 'HTML-AutoCloseTag'
 
 " matchit (extended % matching)
 Bundle 'matchit.zip'
+
+" Better CSS Syntax highlight
+Bundle 'Better-CSS-Syntax-for-Vim'
