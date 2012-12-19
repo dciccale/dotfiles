@@ -332,6 +332,9 @@ set shortmess=atI
 " stop annoying noise
 set visualbell
 
+" restore messed up vim
+map <F5> :redraw!<CR><c-w>=
+
 
 
 " ===================== FOLDS =====================
@@ -343,9 +346,6 @@ set nofoldenable
 
 " toggle folds with space bar
 nnoremap <silent> <Space> za
-
-" restore messed up vim
-map <F5> :redraw!<CR><c-w>=
 
 
 
