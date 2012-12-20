@@ -357,7 +357,7 @@ map <S-h> :tabprevious<CR>
 
 " buffer navigation with arrow keys
 nnoremap <Right> :bnext<CR>
-nnoremap <Left>  :bprev<CR>
+nnoremap <Left> :bprev<CR>
 
 
 
