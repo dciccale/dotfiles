@@ -2,7 +2,8 @@
 set nocp
 
 
-" ===================== PLUGINS =====================
+" PLUGINS
+" ==============================================
 
 " my plugins config file path
 let $MYPLUGINS = '~/.vim/plugins.vim'
@@ -11,8 +12,8 @@ let $MYPLUGINS = '~/.vim/plugins.vim'
 exe 'so '.$MYPLUGINS
 
 
-
-" ===================== GVIMRC =====================
+" GVIMRC
+" ==============================================
 
 " define gvimrc here
 if has('gui_running')
@@ -25,7 +26,8 @@ endif
 
 
 
-" ===================== EDITION =====================
+" EDITION
+" ==============================================
 
 " basic edition stuff on
 syntax on
@@ -110,7 +112,8 @@ nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<CR>
 
 
 
-" ===================== SCROLLING =====================
+" SCROLLING
+" ==============================================
 
 " show more lines around cursor when at the edge of file
 set scrolloff=3
@@ -124,7 +127,8 @@ vnoremap <C-y> 5<C-y>
 
 
 
-" ===================== SPELLING =====================
+" SPELLING
+" ==============================================
 
 " fix my common spelling mistakes
 iab slef self
@@ -134,23 +138,8 @@ iab getElementByID getElementById
 
 
 
-" ===================== REGISTERS =====================
-
-" may be I will do this and keep only one register (system clipboard)
-" anyway I can't keep track of more than one..
-" http://stackoverflow.com/a/1290230/194630
-"noremap  y "*y
-"noremap  Y "*Y
-"noremap  p "*p
-"noremap  P "*P
-"vnoremap y "*y
-"vnoremap Y "*Y
-"vnoremap p "*p
-"vnoremap P "*P
-
-
-
-" ===================== MAPPINGS =====================
+" MAPPINGS
+" ==============================================
 
 " change the mapleader from \ to ,
 let mapleader=","
@@ -214,7 +203,8 @@ map <leader>PP "*P
 
 
 
-" ===================== SPLITS =====================
+" SPLITS
+" ==============================================
 
 " always do vertical splits at right side
 set splitright
@@ -250,7 +240,8 @@ endfunction
 
 
 
-" ===================== SEARCH =====================
+" SEARCH
+" ==============================================
 
 " ignore case when searching
 set ignorecase
@@ -279,7 +270,8 @@ nohls
 
 
 
-" ===================== TERMINAL =====================
+" TERMINAL
+" ==============================================
 
 " limit textwidth
 set textwidth=120
@@ -337,7 +329,8 @@ map <F5> :redraw!<CR><c-w>=
 
 
 
-" ===================== FOLDS =====================
+" FOLDS
+" ==============================================
 
 set foldmethod=syntax
 
@@ -349,7 +342,8 @@ nnoremap <silent> <Space> za
 
 
 
-" ===================== NAVIGATION =====================
+" NAVIGATION
+" ==============================================
 
 " easy window navigation
 map <C-h> <C-w>h
@@ -367,7 +361,8 @@ nnoremap <Left>  :bprev<CR>
 
 
 
-" ===================== AUTOCOMMANDS =====================
+" AUTOCOMMANDS
+" ==============================================
 
 " let vim create a template file based on the file type
 autocmd! BufNewFile * silent! 0r $HOME/.vim/template.%:e
@@ -377,13 +372,31 @@ autocmd! BufWritePre * :%s/\s\+$//e
 
 
 
-" ===================== EDIT VIMRC =====================
+" EDIT/SOURCE VIMRC/PLUGINS
+" ==============================================
 
 " vimrc
 nmap <leader>ve :split $MYVIMRC<CR>
 nmap <leader>vs :so $MYVIMRC<CR>
 " plugins.vim
 nmap <leader>pe :exe 'split '.$MYPLUGINS<CR>
+
+
+
+" REGISTERS
+" ==============================================
+
+" may be I will do this and keep only one register (system clipboard)
+" anyway I can't keep track of more than one..
+" http://stackoverflow.com/a/1290230/194630
+"noremap  y "*y
+"noremap  Y "*Y
+"noremap  p "*p
+"noremap  P "*P
+"vnoremap y "*y
+"vnoremap Y "*Y
+"vnoremap p "*p
+"vnoremap P "*P
 
 
 
