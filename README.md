@@ -23,3 +23,12 @@ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 ```
 :BundleInstall
 ```
+
+### Plugin updates
+
+Each time you want to update any plugin vundle does it for you, just run this command in vim:
+
+```
+:BundleUpdate
+```
+
