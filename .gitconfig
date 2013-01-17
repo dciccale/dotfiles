@@ -15,10 +15,13 @@
 
 [alias]
   s = status
-  c = commit
+  co = commit
   ch = checkout
   br = branch
-  p = push
+  ph = push
+  pl = pull
+  revert = reset HEAD
+  uncommit = reset --soft HEAD^
 
 # github url shortcuts
 [url "http://github.com/"]

@@ -2,6 +2,7 @@
 set nocp
 
 
+
 " PLUGINS
 " ==============================================
 
@@ -10,6 +11,7 @@ let $MYPLUGINS = '~/.vim/plugins.vim'
 
 " load plugins managed by vundle
 exe 'so '.$MYPLUGINS
+
 
 
 " GVIMRC
@@ -79,9 +81,6 @@ set listchars=tab:>-,trail:·
 highlight TrailWhitespace ctermbg=red guibg=#f62c73
 match TrailWhitespace /\s\+$\| \+\ze\t/
 
-" autocomplete using tab
-inoremap <expr> <Tab> strpart(getline('.'), col('.') - 2, 1) =~ '\w' ? "\<C-P>" : "\<Tab>"
-
 " switch between last two files
 nnoremap <leader><leader> <c-^>
 
@@ -89,7 +88,7 @@ nnoremap <leader><leader> <c-^>
 set undolevels=1000
 
 " do not syntax highlight too long lines
-set synmaxcol=800
+set synmaxcol=500
 
 " keep selection to indent/outdent
 vnoremap < <gv
@@ -101,11 +100,8 @@ imap <C-j> <C-o>j
 imap <C-k> <C-o>k
 imap <C-l> <C-o>l
 
-" select all
-map <leader>a ggVG
-
-" enter key goes to error in quickfix window
-au BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
+" select all and keep cursor in place
+nmap <leader>a ggVG
 
 " join lines with cursor staying in place
 nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<CR>
@@ -153,12 +149,12 @@ map <leader>bd :bd<CR>
 " quick save
 map <leader>w :w<CR>
 
-" force save
+" force save of files with root permission
 com! W :w !sudo tee %
 map <leader>W :W<CR>
 
 " quick source current file
-map <leader>s :so %<CR>
+map <leader>so :so %<CR>
 
 " make j/k move to next visual line instead of pysical line
 " http://yubinkim.com/?p=6
@@ -189,7 +185,7 @@ endif
 nnoremap <CR> o<ESC>k
 
 " easy remove line in normal mode
-" (copy to _ for not loosing the last register)
+" (copy to _ for not losing the last register)
 nnoremap <BS> "_dd
 
 " easy empty line without going insert mode
@@ -201,42 +197,30 @@ map <leader>pp "*p
 map <leader>YY "*Y
 map <leader>PP "*P
 
+" list current dir files
+nmap <C-p> :e <C-d>
+
 
 
 " SPLITS
 " ==============================================
 
 " always do vertical splits at right side
-set splitright
+" and horizontal splits below
+set splitright splitbelow
 
-" always do horizontal splits below
-set splitbelow
-
-" reize splits on window resize
-au VimResized * exe "normal! \<c-w>="
+" equally resize splits on window resize
+autocmd VimResized * wincmd=
 
 " only have cursorline in current window
 autocmd WinLeave * set nocursorline
 autocmd WinEnter * set cursorline
 
-" Max/unmax splits
-nnoremap <C-w>o :call MaximizeToggle()<cr>
-
-function! MaximizeToggle()
-  if exists("s:maximize_session")
-    exec "source " . s:maximize_session
-    call delete(s:maximize_session)
-    unlet s:maximize_session
-    let &hidden=s:maximize_hidden_save
-    unlet s:maximize_hidden_save
-  else
-    let s:maximize_hidden_save = &hidden
-    let s:maximize_session = tempname()
-    set hidden
-    exec "mksession! " . s:maximize_session
-    only
-  endif
-endfunction
+" move splits around
+nnoremap <leader>sl <C-w><S-h>
+nnoremap <leader>sr <C-w><S-l>
+nnoremap <leader>st <C-w><S-k>
+nnoremap <leader>sb <C-w><S-j>
 
 
 
@@ -255,8 +239,11 @@ set incsearch
 " highlight search terms
 set hlsearch
 
+" do not highlight when vim starts
+nohls
+
 " hide search highlight
-nnoremap <leader>0 :nohls<CR>
+nnoremap <silent> <leader>0 :nohls<CR>
 
 " don't move on *
 nnoremap * *<C-o>
@@ -265,22 +252,21 @@ nnoremap * *<C-o>
 nmap n nzz
 nmap N Nzz
 
-" do not highlight when vim starts
-nohls
-
 
 
 " TERMINAL
 " ==============================================
 
+let s:txtwidth=120
+
 " limit textwidth
-set textwidth=120
+exe 'set textwidth=' . s:txtwidth
+
+" highlight column limit
+exe 'set colorcolumn=' . s:txtwidth
 
 " wider number width
 set numberwidth=6
-
-" highlight column at 120 chars
-set colorcolumn=120
 
 " disable blinking cursor
 set guicursor=a:blinkon0
@@ -289,16 +275,9 @@ set guicursor=a:blinkon0
 set laststatus=2
 
 " my status line
-set statusline=\ #%n\ %F
-set statusline+=\ %m
-set statusline+=\ %r
-set statusline+=Line\ %l\ %P
-set statusline+=\ \ Column\ %c
-set statusline+=%=
-set statusline+=\ [%{&ff}]
-set statusline+=\ %{&ft}
+set statusline=\ #%n\ %f\ %m\ %r\ Line\ %l\ %P\ \ Column\ %c%=\ [%{&ff}]\ %{&ft}
 
-" more space to see command line
+" higher command line
 set cmdheight=2
 
 " get rid of separation chars
@@ -313,9 +292,8 @@ set title
 " auto cd to the current buffer directory
 set autochdir
 
-" do not generate backup nor swap files
-set nobackup
-set noswapfile
+" no backup/swap files
+set nobackup noswapfile
 
 " shorten vim messages
 " see :h shortmess for the breakdown of what this changes
@@ -324,7 +302,7 @@ set shortmess=atI
 " stop annoying noise
 set visualbell
 
-" restore messed up vim
+" restore messed up vim and splits
 map <F5> :redraw!<CR><c-w>=
 
 
@@ -339,6 +317,9 @@ set nofoldenable
 
 " toggle folds with space bar
 nnoremap <silent> <Space> za
+
+" allow syntax foldmethod for javascript
+let javaScript_fold=1
 
 
 
@@ -355,7 +336,7 @@ map <C-l> <C-w>l
 map <S-l> :tabnext<CR>
 map <S-h> :tabprevious<CR>
 
-" buffer navigation with arrow keys
+" easy buffer navigation with arrow keys
 nnoremap <Right> :bnext<CR>
 nnoremap <Left> :bprev<CR>
 
@@ -365,10 +346,16 @@ nnoremap <Left> :bprev<CR>
 " ==============================================
 
 " let vim create a template file based on the file type
-autocmd! BufNewFile * silent! 0r $HOME/.vim/template.%:e
+autocmd! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 
-" remove unwanted trailling spaces
+" remove unwanted trailling spaces on save
 autocmd! BufWritePre * :%s/\s\+$//e
+
+" set current path to current file parent directory for better use of :find
+autocmd! BufEnter * silent! let &path = expand('%:p:h') . '/**'
+
+" enter key goes to error in quickfix window (CoffeeLint fix)
+autocmd BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
 
 
 
@@ -378,6 +365,7 @@ autocmd! BufWritePre * :%s/\s\+$//e
 " vimrc
 nmap <leader>ve :split $MYVIMRC<CR>
 nmap <leader>vs :so $MYVIMRC<CR>
+
 " plugins.vim
 nmap <leader>pe :exe 'split '.$MYPLUGINS<CR>
 
@@ -397,31 +385,3 @@ nmap <leader>pe :exe 'split '.$MYPLUGINS<CR>
 "vnoremap Y "*Y
 "vnoremap p "*p
 "vnoremap P "*P
-
-
-
-" ===================== SAVE/RESTORE SESSION =====================
-" under development
-"function! SaveSession()
-"  execute 'mksession! ~/.vim/session.vim'
-"endfunction
-
-"if filereadable('~/.vim/session.vim')
-"  execute 'so ~/.vim/session.vim'
-"endif
-
-"function! RestoreSession()
-  "if filereadable('~/.vim/session.vim')
-    "execute 'so ~/.vim/session.vim'
-    "if bufexists(1)
-      "for l in range(1, bufnr('$'))
-        "if bufwinnr(l) == -1
-          "execute 'sbuffer ' . l
-        "endif
-      "endfor
-    "endif
-  "endif
-"endfunction
-
-"autocmd! VimLeave * call SaveSession()
-"autocmd! VimEnter * call RestoreSession()

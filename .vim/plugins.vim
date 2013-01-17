@@ -8,29 +8,7 @@ Bundle 'gmarik/vundle'
 
 " CoffeeScript
 Bundle 'kchmck/vim-coffee-script'
-augroup coffeescript
-  au!
-  " CoffeeLint before compiling
-  "au BufWritePre *.coffee silent CoffeeLint! | cwindow | redraw!
-  "
-  " auto-compile on save
-  " (disable until come with a way of settin output path)
-  " au BufWritePost *.coffee silent CoffeeMake! | cwindow | redraw!
-  "
-  " fold by indentation in .coffee files
-  au BufNewFile,BufReadPost *.coffee setlocal foldmethod=indent nofoldenable
-augroup END
-
-" CommandT
-Bundle 'git://git.wincent.com/command-t.git'
-" show window at top
-let g:CommandTMatchWindowAtTop = 1
-" show few lines, is fuzzy search no need to read all
-let g:CommandTMaxHeight = 10
-" ctrl+p like sublime
-nnoremap <C-p> :CommandT<CR>
-" ctrl+b like sublime
-nnoremap <C-b> :CommandTBuffer<CR>
+autocmd BufNewFile,BufReadPost *.coffee setlocal foldmethod=indent nofoldenable
 
 " SnipMate
 Bundle 'msanders/snipmate.vim'
@@ -45,10 +23,11 @@ colorscheme denkai
 " Jade
 Bundle 'digitaltoad/vim-jade'
 
-" Zoom (easy increase/decrease vim fontsize)
-nmap <leader>+ :ZoomIn<CR>
-nmap <leader>- :ZoomOut<CR>
-nmap <leader>= :ZoomReset<CR>
+" Zoom (easy increase/decrease vim font size)
+Bundle 'dciccale/guizoom.vim'
+map <leader>+ :ZoomIn<CR>
+map <leader>- :ZoomOut<CR>
+map <leader>= :ZoomReset<CR>
 
 " delimitMate
 Bundle 'Raimondi/delimitMate'
@@ -61,3 +40,9 @@ Bundle 'matchit.zip'
 
 " Better CSS Syntax highlight
 Bundle 'Better-CSS-Syntax-for-Vim'
+
+" supertab
+Bundle 'ervandew/supertab'
+
+" better javascript syntax
+Bundle 'JavaScript-syntax'
