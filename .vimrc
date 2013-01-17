@@ -81,9 +81,6 @@ set listchars=tab:>-,trail:·
 highlight TrailWhitespace ctermbg=red guibg=#f62c73
 match TrailWhitespace /\s\+$\| \+\ze\t/
 
-" switch between last two files
-nnoremap <leader><leader> <c-^>
-
 " use many undos
 set undolevels=1000
 
@@ -99,9 +96,6 @@ imap <C-h> <C-o>h
 imap <C-j> <C-o>j
 imap <C-k> <C-o>k
 imap <C-l> <C-o>l
-
-" select all and keep cursor in place
-nmap <leader>a ggVG
 
 " join lines with cursor staying in place
 nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<CR>
@@ -148,6 +142,12 @@ map <leader>bd :bd<CR>
 
 " quick save
 map <leader>w :w<CR>
+
+" select all and keep cursor in place
+nmap <leader>a ggVG
+
+" switch between last two files
+nnoremap <leader><leader> <c-^>
 
 " force save of files with root permission
 com! W :w !sudo tee %
@@ -377,10 +377,10 @@ nmap <leader>pe :exe 'split '.$MYPLUGINS<CR>
 " may be I will do this and keep only one register (system clipboard)
 " anyway I can't keep track of more than one..
 " http://stackoverflow.com/a/1290230/194630
-"noremap  y "*y
-"noremap  Y "*Y
-"noremap  p "*p
-"noremap  P "*P
+"noremap y "*y
+"noremap Y "*Y
+"noremap p "*p
+"noremap P "*P
 "vnoremap y "*y
 "vnoremap Y "*Y
 "vnoremap p "*p
