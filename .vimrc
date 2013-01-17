@@ -138,7 +138,7 @@ let mapleader=","
 nnoremap - :
 
 " easy :bd
-map <leader>bd :bd<CR>
+map <silent> <leader>bd :bd<CR>
 
 " quick save
 map <leader>w :w<CR>
@@ -152,9 +152,6 @@ nnoremap <leader><leader> <c-^>
 " force save of files with root permission
 com! W :w !sudo tee %
 map <leader>W :W<CR>
-
-" quick source current file
-map <leader>so :so %<CR>
 
 " make j/k move to next visual line instead of pysical line
 " http://yubinkim.com/?p=6
