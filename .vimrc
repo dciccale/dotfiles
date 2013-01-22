@@ -91,12 +91,6 @@ set synmaxcol=500
 vnoremap < <gv
 vnoremap > >gv
 
-" move the cursor when insert mode
-imap <C-h> <C-o>h
-imap <C-j> <C-o>j
-imap <C-k> <C-o>k
-imap <C-l> <C-o>l
-
 " join lines with cursor staying in place
 nnoremap <silent> J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<CR>
 
@@ -140,18 +134,22 @@ nnoremap - :
 " easy :bd
 map <silent> <leader>bd :bd<CR>
 
+" delete all buffers
+map <silent> <leader>wp :1,9999bwipeout<CR>
+
 " quick save
 map <leader>w :w<CR>
 
 " select all and keep cursor in place
 nmap <leader>a ggVG
 
-" switch between last two files
-nnoremap <leader><leader> <c-^>
-
 " force save of files with root permission
 com! W :w !sudo tee %
 map <leader>W :W<CR>
+
+" maximize vim window
+com! MAX :let &lines=500<bar>let &columns=500
+map <leader>m :MAX<CR>
 
 " make j/k move to next visual line instead of pysical line
 " http://yubinkim.com/?p=6
@@ -185,9 +183,6 @@ nnoremap <CR> o<ESC>k
 " (copy to _ for not losing the last register)
 nnoremap <BS> "_dd
 
-" easy empty line without going insert mode
-nnoremap <leader>D 0D<ESC>
-
 " easey copy/paste from/to system clipboard
 map <leader>yy "*y
 map <leader>pp "*p
@@ -196,6 +191,20 @@ map <leader>PP "*P
 
 " list current dir files
 nmap <C-p> :e <C-d>
+
+" fast edit desired snippet of snipMate
+function! EditSnippet()
+  call inputsave()
+  let type = input('Enter snippets lang ')
+  call inputrestore()
+  if type == 'js'
+    let snippetsFile = 'javascript'
+  endif
+  exe ':e ~/.vim/snippets/' . snippetsFile . '.snippets'
+endfunction
+
+" fast snippet edit
+map <silent> <leader>se :call EditSnippet()<CR>
 
 
 
@@ -207,11 +216,11 @@ nmap <C-p> :e <C-d>
 set splitright splitbelow
 
 " equally resize splits on window resize
-autocmd VimResized * wincmd=
+au! VimResized * wincmd=
 
 " only have cursorline in current window
-autocmd WinLeave * set nocursorline
-autocmd WinEnter * set cursorline
+au! WinLeave * set nocursorline
+au! WinEnter * set cursorline
 
 " move splits around
 nnoremap <leader>sl <C-w><S-h>
@@ -333,6 +342,12 @@ map <C-l> <C-w>l
 map <S-l> :tabnext<CR>
 map <S-h> :tabprevious<CR>
 
+" move the cursor in insert mode
+imap <C-h> <C-o>h
+imap <C-j> <C-o>j
+imap <C-k> <C-o>k
+imap <C-l> <C-o>l
+
 " easy buffer navigation with arrow keys
 nnoremap <Right> :bnext<CR>
 nnoremap <Left> :bprev<CR>
@@ -343,16 +358,16 @@ nnoremap <Left> :bprev<CR>
 " ==============================================
 
 " let vim create a template file based on the file type
-autocmd! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
+au! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 
 " remove unwanted trailling spaces on save
-autocmd! BufWritePre * :%s/\s\+$//e
+au! BufWritePre * :%s/\s\+$//e
 
 " set current path to current file parent directory for better use of :find
-autocmd! BufEnter * silent! let &path = expand('%:p:h') . '/**'
+au! BufEnter * silent! let &path = expand('%:p:h') . '/**'
 
 " enter key goes to error in quickfix window (CoffeeLint fix)
-autocmd BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
+au! BufWinEnter quickfix nmap <buffer> <Enter> :.cc<CR>
 
 
 
