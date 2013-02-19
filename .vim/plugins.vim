@@ -6,43 +6,38 @@ call vundle#rc()
 " Vundle
 Bundle 'gmarik/vundle'
 
-" CoffeeScript
-Bundle 'kchmck/vim-coffee-script'
-autocmd BufNewFile,BufReadPost *.coffee setlocal foldmethod=indent nofoldenable
+" my custom molokai theme (denkai)
+Bundle 'dciccale/denkai.vim'
 
 " SnipMate
 Bundle 'msanders/snipmate.vim'
 
-" Stylus syntax highlight (doesn't feel is working right)
-Bundle 'wavded/vim-stylus'
-
-" my custom molokai theme (denkai)
-Bundle 'dciccale/denkai.vim'
-colorscheme denkai
-
-" Jade
-Bundle 'digitaltoad/vim-jade'
-
-" Zoom (easy increase/decrease vim font size)
-Bundle 'dciccale/guizoom.vim'
-map <leader>+ :ZoomIn<CR>
-map <leader>- :ZoomOut<CR>
-map <leader>= :ZoomReset<CR>
-
 " delimitMate
 Bundle 'Raimondi/delimitMate'
 
-" AutoCloseTag
-Bundle 'HTML-AutoCloseTag'
+" CoffeeScript
+Bundle 'kchmck/vim-coffee-script'
+
+" guizoom (easy increase/decrease vim font size)
+Bundle 'dciccale/guizoom.vim'
 
 " matchit (extended % matching)
 Bundle 'matchit.zip'
-
-" Better CSS Syntax highlight
-Bundle 'Better-CSS-Syntax-for-Vim'
 
 " supertab
 Bundle 'ervandew/supertab'
 
 " better javascript syntax
 Bundle 'JavaScript-syntax'
+
+" AutoCloseTag (need lots of fixes)
+Bundle 'HTML-AutoCloseTag'
+
+" Jade (doesn't work very well)
+Bundle 'digitaltoad/vim-jade'
+
+" Better CSS highlight
+Bundle 'Better-CSS-Syntax-for-Vim'
+
+" Stylus syntax highlight (doesn't work very well)
+Bundle 'wavded/vim-stylus'
