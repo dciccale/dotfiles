@@ -4,7 +4,7 @@ set nocp
 
 
 " PLUGINS
-" ==============================================
+" ==================================================
 
 " my plugins config file path
 let $MYPLUGINS = '~/.vim/plugins.vim'
@@ -15,7 +15,7 @@ exe 'so '.$MYPLUGINS
 
 
 " GVIMRC
-" ==============================================
+" ==================================================
 
 " define gvimrc here
 if has('gui_running')
@@ -26,18 +26,35 @@ if has('gui_running')
   endif
 endif
 
+" disable blinking cursor
+set guicursor=a:blinkon0
+
 
 
 " EDITION
-" ==============================================
+" ==================================================
 
-colorscheme denkai
+color badwolf
 
 " basic edition stuff on
 syntax on
 filetype on
 filetype plugin on
 filetype indent on
+
+" time out on key codes but not mappings
+set notimeout
+set ttimeout
+set ttimeoutlen=10
+
+" return to the same line when you reopen a file
+augroup line_return
+  au!
+  au BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \     execute 'normal! g`"zvzz' |
+      \ endif
+augroup end
 
 " use unix as standard file type
 set fileformats=unix,dos,mac
@@ -48,6 +65,9 @@ set autoindent
 " good when starting a new line
 set smartindent
 
+" copy the previous indentation on autoindenting
+"set copyindent
+
 " fill tabs with spaces
 set expandtab
 
@@ -55,9 +75,6 @@ set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
-
-" copy the previous indentation on autoindenting
-set copyindent
 
 " don't wrap lines
 set nowrap
@@ -68,11 +85,14 @@ set number
 " highlight current line
 set cursorline
 
-" auto load files when hanged outside of Vim
+" auto load files when changed outside of vim
 set autoread
 
 " allow hidden buffers
 set hidden
+
+" allow more tabs
+set tabpagemax=50
 
 " highlight trailing whitespace (and tabs)
 " http://nvie.com/posts/how-i-boosted-my-vim/
@@ -93,21 +113,25 @@ set synmaxcol=500
 vnoremap < <gv
 vnoremap > >gv
 
+" easy indent/outdent
+nn < <<
+nn > >>
+
 " join lines with cursor staying in place
-nnoremap J mzJ`z
+nn J mzJ`z
 
 
 
 " SCROLLING
-" ==============================================
+" ==================================================
 
 " show more lines around cursor when at the edge of file
 set scrolloff=3
 set sidescrolloff=5
 
 " scroll viewport faster
-nnoremap <c-e> 5<c-e>
-nnoremap <c-y> 5<c-y>
+nn <c-e> 5<c-e>
+nn <c-y> 5<c-y>
 vnoremap <c-e> 5<c-e>
 vnoremap <c-y> 5<c-y>
 
@@ -116,13 +140,13 @@ set nostartofline
 
 
 " MAPPINGS
-" ==============================================
+" ==================================================
 
 " change the mapleader from \ to ,
 let mapleader=","
 
 " - is the new : (i.e. -w to save) faster instead of shift+:
-nnoremap - :
+nn - :
 
 " easy :bd
 map <silent> <leader>bd :bd<cr>
@@ -146,75 +170,57 @@ map <leader>m :let &lines=500<bar>let &columns=500<cr>
 " minimize vim window
 map <leader>n :let &lines=35<bar>let &columns=140<bar>winpos 150 110<cr>
 
-" make j/k move to next visual line instead of pysical line
-" http://yubinkim.com/?p=6
-nnoremap k gk
-nnoremap j gj
-nnoremap gk k
-nnoremap gj j
-
-" easy move lines in all modes
-imap <a-j> <esc>mz:m+<cr>`zi
-imap <a-k> <esc>mz:m-2<cr>`zi
-nmap <a-j> mz:m+<cr>`z
-nmap <a-k> mz:m-2<cr>`z
-vmap <a-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <a-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-" remap Alt key in Mac (don't use macmeta)
-if has('mac') || has('macunix')
-  imap <d-j> <a-j>
-  imap <d-k> <a-k>
-  nmap <d-j> <a-j>
-  nmap <d-k> <a-k>
-  vmap <d-j> <a-j>
-  vmap <d-k> <a-k>
-endif
+" easy move lines in all modes without losing cursor position
+imap <d-j> <esc>mz:m+<cr>`zi
+imap <d-k> <esc>mz:m-2<cr>`zi
+nmap <d-j> mz:m+<cr>`z
+nmap <d-k> mz:m-2<cr>`z
+vmap <d-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <d-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " easy add new line in normal mode
 " without moving the cursor
-nnoremap <cr> mzo<esc>`z
+nn <cr> mzo<esc>`z
 
 " easy remove line in normal mode
 " (copy to _ for not losing the last register)
-nnoremap <BS> "_dd
-
-" easy copy/paste from/to system clipboard
-map <leader>yy "*y
-map <leader>pp "*p
-map <leader>YY "*Y
-map <leader>PP "*P
+nn <bs> "_dd
 
 " list current dir files and folders
 nmap <c-p> :e <c-d>
 
-" quick install new bundles
+" list all buffers
+nmap <c-o> :ls<cr>:e #
+
+" uppercase current word in insert mode
+inoremap <c-u> <esc>mzgUiw`za
+
+" panic!
+nn <f9> mzggg?G`z
+
+" retab and reformat
+map <leader>r mz<bar>:retab!<bar>:normal gg=G<cr>`z
+
+
+
+" VUNDLE MAPPINGS
+" ==================================================
 map <leader>bi :BundleInstall<cr>
+map <leader>bc :BundleClean<cr>
+map <leader>bu :BundleUpdate<cr>
 
-" easy open buffer in new tab
-map <leader>te :ls<cr>:tabedit #
 
-" guizoom.vim mappings
+
+" GUIZOOM MAPPINGS
+" ==================================================
 map <leader>+ :ZoomIn<cr>
 map <leader>- :ZoomOut<cr>
 map <leader>= :ZoomReset<cr>
 
-" function to yank lines and keep cursor in position
-function! YankInPlace()
-  " save last cursor position
-  let p=getpos('.')
-  " yank current visual selection to reg x
-  normal gv"xy
-  " set last cursor position
-  call setpos('.', p)
-endfunction
-
-" mapping to YankInPlace
-"vnoremap <silent> Y :call YankInPlace()<cr>
 
 
 " SNIPPETS
-" ==============================================
+" ==================================================
 
 " edit desired snippet of snipMate
 function! EditSnippet()
@@ -231,8 +237,9 @@ endfunction
 map <silent> <leader>se :call EditSnippet()<cr>
 
 
+
 " SPLITS
-" ==============================================
+" ==================================================
 
 " always do vertical splits at right side
 " and horizontal splits below
@@ -242,22 +249,39 @@ set splitright splitbelow
 au! VimResized * :wincmd =
 
 " only have cursorline in current window
-au! WinLeave * set nocursorline
-au! WinEnter * set cursorline
+augroup cline
+  au!
+  au! WinLeave * set nocursorline
+  au! WinEnter * set cursorline
+augroup end
 
 " move splits around
-nnoremap <leader>sl <c-w><s-h>
-nnoremap <leader>sr <c-w><s-l>
-nnoremap <leader>st <c-w><s-k>
-nnoremap <leader>sb <c-w><s-j>
+nn <leader>sl <c-w><s-h>
+nn <leader>sr <c-w><s-l>
+nn <leader>st <c-w><s-k>
+nn <leader>sb <c-w><s-j>
 
 " open all buffers in vertical split
 map <silent> <leader>vb :vertical :ball<cr>
 
 
 
+" TABS
+" ==================================================
+
+" easy open buffer in new tab
+map <leader>te :ls<cr>:tabedit #
+
+" easy close tab
+map <leader>tc :tabclose<cr>
+
+" open all buffers in tabs
+map <silent> <leader>tb :tab :ball<cr>
+
+
+
 " SEARCH
-" ==============================================
+" ==================================================
 
 " ignore case when searching
 set ignorecase
@@ -271,14 +295,14 @@ set incsearch
 " highlight search terms
 set hlsearch
 
-" do not highlight when vim starts
+" remove highlight when vim starts
 nohls
 
 " hide search highlight
-nnoremap <silent> <leader>0 :nohls<cr>
+nn <silent> <leader>0 :nohls<cr>
 
 " don't move on *
-nnoremap * *<c-o>
+nn * *<c-o>
 
 " center search
 nmap n nzz
@@ -287,7 +311,7 @@ nmap N Nzz
 
 
 " TERMINAL
-" ==============================================
+" ==================================================
 
 let s:txtwidth=120
 
@@ -297,11 +321,8 @@ exe 'set textwidth=' . s:txtwidth
 " highlight column limit
 exe 'set colorcolumn=' . s:txtwidth
 
-" wider number width
+" wider number column
 set numberwidth=6
-
-" disable blinking cursor
-set guicursor=a:blinkon0
 
 " always show status bar
 set laststatus=2
@@ -335,12 +356,12 @@ set shortmess=atI
 set visualbell
 
 " restore messed up vim and splits
-map <F5> :redraw!<cr><c-w>=
+map <f5> :redraw!<cr><c-w>=
 
 
 
 " FOLDS
-" ==============================================
+" ==================================================
 
 set foldmethod=syntax
 
@@ -348,7 +369,7 @@ set foldmethod=syntax
 set nofoldenable
 
 " toggle folds with space bar
-nnoremap <silent> <space> za
+nn <silent> <space> za
 
 " allow syntax foldmethod for javascript
 let javaScript_fold=1
@@ -356,7 +377,14 @@ let javaScript_fold=1
 
 
 " NAVIGATION
-" ==============================================
+" ==================================================
+
+" make j/k move to next visual line instead of physical line
+" http://yubinkim.com/?p=6
+nn k gk
+nn j gj
+nn gk k
+nn gj j
 
 " easy window navigation
 map <c-h> <c-w>h
@@ -375,13 +403,13 @@ imap <c-k> <c-o>k
 imap <c-l> <c-o>l
 
 " easy buffer navigation with arrow keys
-nnoremap <right> :bnext<cr>
-nnoremap <left> :bprev<cr>
+nn <right> :bnext<cr>
+nn <left> :bprev<cr>
 
 
 
 " AUTOCOMMANDS
-" ==============================================
+" ==================================================
 
 " set this when coffeescript
 au! BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
@@ -396,12 +424,14 @@ au! BufWritePre * :%s/\s\+$//e
 au! BufEnter * silent! let &path = expand('%:p:h') . '/**'
 
 " enter key goes to error in quickfix window (CoffeeLint fix)
-au! BufWinEnter quickfix nmap <buffer> <Enter> :.cc<cr>
+au! BufWinEnter quickfix nmap <buffer> <enter> :.cc<cr>
 
 
 
 " EDIT/SOURCE VIMRC/PLUGINS
-" ==============================================
+" ==================================================
+
+" easy edit
 
 " vimrc
 nmap <leader>ve :split $MYVIMRC<cr>
@@ -413,15 +443,15 @@ nmap <leader>pe :exe 'split '.$MYPLUGINS<cr>
 
 
 " PROJECTS
-" ==============================================
+" ==================================================
 
-" load any specific projects configs
+" load projects configs
 so ~/.vim/projects.vim
 
 
 
 " SPELLING
-" ==============================================
+" ==================================================
 
 " fix my common spelling mistakes
 iab slef self
@@ -432,10 +462,10 @@ iab getElementByID getElementById
 
 
 " REGISTERS
-" ==============================================
+" ==================================================
 
 " may be I will do this and keep only one register (system clipboard)
-" anyway I can't keep track of more than one..
+" anyway I can't keep track of more than two..
 " http://stackoverflow.com/a/1290230/194630
 "noremap y "*y
 "noremap Y "*Y
