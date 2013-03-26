@@ -66,7 +66,7 @@ set autoindent
 set smartindent
 
 " copy the previous indentation on autoindenting
-"set copyindent
+set copyindent
 
 " fill tabs with spaces
 set expandtab
