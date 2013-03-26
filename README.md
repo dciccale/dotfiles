@@ -7,14 +7,14 @@ Here are some of my dotfile configurations for git and vim.
 1 - Drop these dotfiles in your home directory just by doing:
 
 ```bash
-git clone https://github.com/dciccale/dotfiles.git ~/
+$ git clone https://github.com/dciccale/dotfiles.git ~/
 ```
 
 
 2 - Install Vundle for plugin management:
 
 ```bash
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+$ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 ```
 
 
