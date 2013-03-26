@@ -255,6 +255,9 @@ augroup cline
   au! WinEnter * set cursorline
 augroup end
 
+" easy close window
+map <leader>wc <c-w>c
+
 " move splits around
 nn <leader>sl <c-w><s-h>
 nn <leader>sr <c-w><s-l>
