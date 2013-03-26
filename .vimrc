@@ -227,10 +227,8 @@ function! EditSnippet()
   call inputsave()
   let type = input('Enter snippets lang ')
   call inputrestore()
-  if type == 'js'
-    let snippetsFile = 'javascript'
-  endif
-  exe ':e ~/.vim/snippets/' . snippetsFile . '.snippets'
+  let snippetsFileName = type == 'js' ? 'javascript' : type
+  exe ':e ~/.vim/snippets/' . snippetsFileName . '.snippets'
 endfunction
 
 " fast snippet edit
