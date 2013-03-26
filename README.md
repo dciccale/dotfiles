@@ -11,7 +11,7 @@ git clone https://github.com/dciccale/dotfiles.git ~/
 ```
 
 
-2 - I use vundle for plugin management, so clone it, only need to do this once:
+2 - Install Vundle for plugin management:
 
 ```bash
 git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
