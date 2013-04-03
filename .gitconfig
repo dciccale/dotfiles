@@ -16,16 +16,22 @@
 [alias]
   s = status
   co = commit
-  com = commit -m
-  coam = commit -a -m
+  cm = commit -m
+  cam = commit -a -m
   ch = checkout
+  chp = checkout gh-pages
+  chm = checkout master
   br = branch
   ph = push origin
   pl = pull
-  revert = reset HEAD
-  uncommit = reset --soft HEAD^
+  unstage = reset HEAD
+  unc = reset --soft HEAD^
+  sh = stash
+  unsh = stash apply
+  rv = remote -v
+  ra = remote add
 
-# github url shortcuts
+# url shortcuts
 [url "http://github.com/"]
   insteadOf = "gh:"
 
@@ -39,3 +45,11 @@
 
 [url "http://github.com/dciccale/"]
   insteadOf = "gd:"
+
+[url "git@pdihub.hi.inet:"]
+  insteadOf = "pdi:"
+
+[url "git@pdihub.hi.inet:dc30/"]
+  insteadOf = "dc30:"
+[push]
+	default = current
