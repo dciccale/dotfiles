@@ -52,4 +52,4 @@
 [url "git@pdihub.hi.inet:dc30/"]
   insteadOf = "dc30:"
 [push]
-	default = current
+  default = current
