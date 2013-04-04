@@ -4,25 +4,28 @@ Here are some of my dotfile configurations for git and vim.
 
 ## Installation
 
-1 - Drop these dotfiles in your home directory just by doing:
+Drop these dotfiles in your home directory just by doing:
 
 ```bash
 $ git clone https://github.com/dciccale/dotfiles.git ~/
 ```
 
+## Vim plugins installation
 
-2 - Install Vundle for plugin management:
+1 - Install Vundle for plugin management:
 
 ```bash
 $ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 ```
 
 
-3 - Open vim and run the following command to install all the used plugins:
+2 - Open vim and run the following command to install the plugins used:
 
 ```
 :BundleInstall
 ```
+
+Or if using my mappings just type `,bi`.
 
 ### Plugin updates
 
@@ -31,4 +34,8 @@ Each time you want to update any plugin, vundle does it for you, just run this c
 ```
 :BundleUpdate
 ```
+
+Or if keeping my mappings just do `,bu`.
+
+cheers.
 
