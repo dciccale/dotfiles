@@ -7,17 +7,22 @@
   editor = mvim -f
 
 [color]
-  ui = true # covers diff = true, status = auto, branch = auto
-  interactive = auto
+  ui = always
 
 [merge]
   tool = mvim -d
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
 
 [alias]
   s = status
   co = commit
   cm = commit -m
-  cam = commit -a -m
+  unc = reset --soft HEAD^
+  cam = commit -am
   ch = checkout
   chp = checkout gh-pages
   chm = checkout master
@@ -25,7 +30,6 @@
   ph = push origin
   pl = pull
   unstage = reset HEAD
-  unc = reset --soft HEAD^
   sh = stash
   unsh = stash apply
   rv = remote -v
