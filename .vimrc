@@ -7,10 +7,10 @@ set nocp
 " ==================================================
 
 " my plugins config file path
-let $MYPLUGINS = '~/.vim/plugins.vim'
+let $MYPLUGINS='~/.vim/plugins.vim'
 
 " load plugins managed by vundle
-exe 'so '.$MYPLUGINS
+exe 'so ' . $MYPLUGINS
 
 
 
@@ -41,11 +41,6 @@ syntax on
 filetype on
 filetype plugin on
 filetype indent on
-
-" time out on key codes but not mappings
-set notimeout
-set ttimeout
-set ttimeoutlen=10
 
 " return to the same line when you reopen a file
 augroup line_return
@@ -157,15 +152,19 @@ map <silent> <leader>wp :1,9999bwipeout<cr>
 " quick save
 map <leader>w :w<cr>
 
+" quick quit
+map <silent> <leader>q :q<cr>
+
 " select all
 nmap <leader>a ggVG
 
 " force save of files with root permission
 com! W :w !sudo tee %
-map <leader>W :W<cr>
+map <silent> <leader>W :W<cr>
 
 " maximize vim window
-map <leader>m :let &lines=500<bar>let &columns=500<cr>
+com! Max :let &lines=500<bar>let &columns=500
+map <leader>m :Max<cr>
 
 " minimize vim window
 map <leader>n :let &lines=35<bar>let &columns=140<bar>winpos 150 110<cr>
@@ -199,8 +198,16 @@ inoremap <c-u> <esc>mzgUiw`za
 nn <f9> mzggg?G`z
 
 " retab and reformat
-map <leader>r mz<bar>:retab!<bar>:normal gg=G<cr>`z
+map <leader>rr mz<bar>:retab!<bar>:normal gg=G<cr>`z
 
+" just retab and save
+map <leader>rt :retab!<bar>:w<cr>
+
+" source current file
+map <leader>s :so %<cr>
+
+" disable K in normal mode as I type this often and don't use it
+nn K <nop>
 
 
 " VUNDLE MAPPINGS
@@ -219,8 +226,17 @@ map <leader>= :ZoomReset<cr>
 
 
 
+" GIT GUTTER CONFIG
+" ==================================================
+let g:gitgutter_all_on_focusgained = 0
+
+
+
 " SNIPPETS
 " ==================================================
+
+" reload all snippets
+map <silent> <leader>rs :call ReloadAllSnippets()<cr>
 
 " edit desired snippet of snipMate
 function! EditSnippet()
@@ -228,7 +244,7 @@ function! EditSnippet()
   let type = input('Enter snippets lang ')
   call inputrestore()
   let snippetsFileName = type == 'js' ? 'javascript' : type
-  exe ':e ~/.vim/snippets/' . snippetsFileName . '.snippets'
+  exe ':sp ~/.vim/snippets/' . snippetsFileName . '.snippets'
 endfunction
 
 " fast snippet edit
@@ -356,6 +372,8 @@ set shortmess=atI
 " stop annoying noise
 set visualbell
 
+let g:netrw_liststyle=3
+
 " restore messed up vim and splits
 map <f5> :redraw!<cr><c-w>=
 
@@ -432,14 +450,12 @@ au! BufWinEnter quickfix nmap <buffer> <enter> :.cc<cr>
 " EDIT/SOURCE VIMRC/PLUGINS
 " ==================================================
 
-" easy edit
-
 " vimrc
 nmap <leader>ve :split $MYVIMRC<cr>
 nmap <leader>vs :so $MYVIMRC<cr>
 
 " plugins.vim
-nmap <leader>pe :exe 'split '.$MYPLUGINS<cr>
+nmap <leader>pe :exe 'split ' . $MYPLUGINS<cr>
 
 
 
@@ -447,7 +463,10 @@ nmap <leader>pe :exe 'split '.$MYPLUGINS<cr>
 " ==================================================
 
 " load projects configs
-so ~/.vim/projects.vim
+let $MYPROJECTS=$HOME . '/.vim/projects.vim'
+if filereadable($MYPROJECTS)
+  exe 'so ' . $MYPROJECTS
+endif
 
 
 
@@ -476,3 +495,6 @@ iab getElementByID getElementById
 "vnoremap Y "*Y
 "vnoremap p "*p
 "vnoremap P "*P
+
+" better js folds
+"set foldmethod=marker foldmarker={,} foldlevel=2
