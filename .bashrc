@@ -18,6 +18,7 @@ function parse_git_branch() {
   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
+# shows the last commit hash
 function parse_git_hash() {
   git rev-parse --short HEAD 2> /dev/null | sed "s/\(.*\)/${Reset}@${White}\1/"
 }
@@ -33,7 +34,6 @@ Reset="$(tput sgr0)"
 
 function prompt() {
   printf '%s%*s%s\n' "$Purple" $(tput cols) "$(parse_git_branch)"
-  #printf "%b" "${Yellow}asdasd"
 }
 
 PROMPT_COMMAND=prompt
