@@ -188,6 +188,10 @@ nn <bs> "_dd
 " list current dir files and folders
 nmap <c-p> :e <c-d>
 
+" list to open in new tab
+nmap <c-t> :tabedit <c-d>
+
+
 " list all buffers
 nmap <c-o> :ls<cr>:e #
 
@@ -204,10 +208,11 @@ map <leader>rr mz<bar>:retab!<bar>:normal gg=G<cr>`z
 map <leader>rt :retab!<bar>:w<cr>
 
 " source current file
-map <leader>s :so %<cr>
+map <silent> <leader>s :so %<cr>
 
 " disable K in normal mode as I type this often and don't use it
 nn K <nop>
+
 
 
 " VUNDLE MAPPINGS
@@ -229,6 +234,9 @@ map <leader>= :ZoomReset<cr>
 " GIT GUTTER CONFIG
 " ==================================================
 let g:gitgutter_all_on_focusgained = 0
+
+" refresh gitgutter
+map <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 
 
@@ -354,6 +362,7 @@ set cmdheight=2
 set fillchars=""
 
 " http://items.sjbach.com/319/configuring-vim-right
+set wildmode=longest,list,full
 set wildmenu
 
 " set terminal title
@@ -495,6 +504,3 @@ iab getElementByID getElementById
 "vnoremap Y "*Y
 "vnoremap p "*p
 "vnoremap P "*P
-
-" better js folds
-"set foldmethod=marker foldmarker={,} foldlevel=2
