@@ -33,4 +33,4 @@ function prompt() {
 }
 
 PROMPT_COMMAND=prompt
-PS1="\n\n${DARKGREY}> ${BLUE}"
+PS1="\n\n\[${DARKGREY}\]> \[${BLUE}\]"
