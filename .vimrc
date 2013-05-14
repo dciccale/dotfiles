@@ -155,6 +155,9 @@ map <leader>w :w<cr>
 " quick quit
 map <silent> <leader>q :q<cr>
 
+" force quit
+map <silent> <leader>k :qa!<cr>
+
 " select all
 nmap <leader>a ggVG
 
@@ -236,15 +239,12 @@ map <leader>= :ZoomReset<cr>
 let g:gitgutter_all_on_focusgained = 0
 
 " refresh gitgutter
-map <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
+map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 
 
 " SNIPPETS
 " ==================================================
-
-" reload all snippets
-map <silent> <leader>rs :call ReloadAllSnippets()<cr>
 
 " edit desired snippet of snipMate
 function! EditSnippet()
@@ -381,6 +381,7 @@ set shortmess=atI
 " stop annoying noise
 set visualbell
 
+" see file explorer in tree style
 let g:netrw_liststyle=3
 
 " restore messed up vim and splits
