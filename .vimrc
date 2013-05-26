@@ -161,6 +161,9 @@ map <silent> <leader>k :qa!<cr>
 " select all
 nmap <leader>a ggVG
 
+" select full javascript function
+nmap <leader>sf V$%
+
 " force save of files with root permission
 com! W :w !sudo tee %
 map <silent> <leader>W :W<cr>
@@ -193,6 +196,9 @@ nmap <c-p> :e <c-d>
 
 " list to open in new tab
 nmap <c-t> :tabedit <c-d>
+
+" leave insert mode and save
+inoremap jj <Esc>:w<cr>
 
 
 " list all buffers
@@ -289,6 +295,9 @@ nn <leader>sb <c-w><s-j>
 " open all buffers in vertical split
 map <silent> <leader>vb :vertical :ball<cr>
 
+" open existing buffer to the right of the current one
+map <leader>os :ls<cr>:vert sp #
+
 
 
 " TABS
@@ -299,6 +308,9 @@ map <leader>te :ls<cr>:tabedit #
 
 " easy close tab
 map <leader>tc :tabclose<cr>
+
+" move tab
+map <leader>tm :tabmove<cr>
 
 " open all buffers in tabs
 map <silent> <leader>tb :tab :ball<cr>
@@ -432,8 +444,8 @@ imap <c-k> <c-o>k
 imap <c-l> <c-o>l
 
 " easy buffer navigation with arrow keys
-nn <right> :bnext<cr>
-nn <left> :bprev<cr>
+nn <silent> <right> :bnext<cr>
+nn <silent> <left> :bprev<cr>
 
 
 

@@ -1,6 +1,6 @@
 alias cl="clear"
 alias ex="exit"
-alias ls="command ls -G"
+alias ls="ls -G"
 alias c="pygmentize -O style=monokai -f console256 -g"
 
 # Easier navigation
@@ -14,6 +14,7 @@ home() {
   cd ~/$@
 }
 alias home=home
+alias reload=". ~/.bashrc"
 
 
 # List only directories

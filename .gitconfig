@@ -10,30 +10,51 @@
   ui = always
 
 [merge]
-  tool = mvim -d
+  tool = kdiff3
 
 [color "status"]
-  added = yellow
-  changed = green
+  added = green
+  changed = yellow
   untracked = cyan
 
 [alias]
-  s = status
+  l = log --graph --decorate
+  # log edited files per commit
+  ll = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]' --decorate --numstat
+  # log (hash, relative date, commit, commiter)
+  ld = log --pretty=format:'%C(yellow)%h %C(bold red)%ad%C(reset)%C(red)%d %C(reset)%s%C(blue) [%cn]' --decorate --date=relative
+  dif = diff --word-diff
+  # find a file path
+  f = !git ls-files | grep -i
+  # search/grep the entire codebase for a string
+  grep = grep -Ii
+  s = status -sb
   co = commit
+  # commit with message
   cm = commit -m
-  unc = reset --soft HEAD^
   cam = commit -am
+  caam = !git add . && git commit -am
+  unc = reset --soft HEAD^
+  cp = cherry-pick
   ch = checkout
+  # checkout files
+  chf = checkout --
+  # for github pages
   chp = checkout gh-pages
   chm = checkout master
   br = branch
   ph = push origin
-  pl = pull
+  pl = pull origin
+  mnoff = merge --no-ff
   unstage = reset HEAD
   sh = stash
-  unsh = stash apply
+  unsh = stash pop
   rv = remote -v
   ra = remote add
+  # project specific
+  bug = !git checkout -b bug/$1
+  feature = !git checkout -b feature/$1
+  goto = !git stash --quiet && git checkout $1 | printf '\n\n'$(tput setaf 4) && printf '\n\n' $(tput sgr0)
 
 # url shortcuts
 [url "http://github.com/"]
@@ -55,5 +76,9 @@
 
 [url "git@pdihub.hi.inet:dc30/"]
   insteadOf = "dc30:"
+
 [push]
+  default = current
+
+[pull]
   default = current

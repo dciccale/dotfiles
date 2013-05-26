@@ -1,21 +1,26 @@
+# .bashrc
+# Author: Denis Ciccale (@tdecs)
+# Source: http://github.com/dciccale/dotfiles/blob/master/.bashrc
+
 export TERM=xterm-256color
 export EDITOR="mvim"
+
+# colors
+PURPLE="$(tput setaf 5)"
+DARKGREY="$(tput setaf 8)"
+WHITE="$(tput setaf 7)"
+YELLOW="$(tput setaf 3)"
+BLUE="$(tput setaf 4)"
+GREEN="$(tput setaf 2)"
+RESET="$(tput sgr0)"
 
 # load bash aliases
 if [ -f ~/.aliases ]; then . ~/.aliases; fi
 
+PATH="/usr/local/mysql/bin:$PATH"
 PATH=$PATH:$HOME/.rvm/bin
 . ~/.rvm/scripts/rvm
 
-PATH=$PATH:/usr/local/mysql/bin
-
-# colors
-PURPLE="$(tput setaf 5)"
-DARKGREY="$(tput setaf 0)"
-WHITE="$(tput setaf 7)"
-YELLOW="$(tput setaf 3)"
-BLUE="$(tput setaf 4)"
-RESET="$(tput sgr0)"
 
 function parse_git_dirty() {
   git diff --quiet --ignore-submodules HEAD 2>/dev/null; [ $? -eq 1 ] && echo "*"
@@ -33,4 +38,5 @@ function prompt() {
 }
 
 PROMPT_COMMAND=prompt
-PS1="\n\n\[${DARKGREY}\]> \[${BLUE}\]"
+PS1="\n\n\[${DARKGREY}\]>\[${RESET}\] "
+PS2='+ '
