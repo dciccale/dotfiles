@@ -155,7 +155,7 @@ map <leader>w :w<cr>
 " quick quit
 map <silent> <leader>q :q<cr>
 
-" force quit
+" force quit (kill vim)
 map <silent> <leader>k :qa!<cr>
 
 " select all
@@ -222,6 +222,9 @@ map <silent> <leader>s :so %<cr>
 " disable K in normal mode as I type this often and don't use it
 nn K <nop>
 
+" open current file with default app
+map <leader>o :!open %<cr>
+
 
 
 " VUNDLE MAPPINGS
@@ -264,6 +267,17 @@ endfunction
 " fast snippet edit
 map <silent> <leader>se :call EditSnippet()<cr>
 
+function! Total()
+  let g:S=0
+  :%s/[+-]\d\+/\=Sum(submatch(0))/
+  echo g:S
+endfunction
+
+function! Sum(number)
+  let g:S = g:S + eval(a:number)
+  return a:number
+endfunction
+
 
 
 " SPLITS
@@ -303,14 +317,11 @@ map <leader>os :ls<cr>:vert sp #
 " TABS
 " ==================================================
 
-" easy open buffer in new tab
-map <leader>te :ls<cr>:tabedit #
-
 " easy close tab
-map <leader>tc :tabclose<cr>
+map <silent> <leader>tc :tabclose<cr>
 
 " move tab
-map <leader>tm :tabmove<cr>
+map <silent> <leader>tm :tabmove<cr>
 
 " open all buffers in tabs
 map <silent> <leader>tb :tab :ball<cr>
@@ -412,8 +423,18 @@ set nofoldenable
 " toggle folds with space bar
 nn <silent> <space> za
 
-" allow syntax foldmethod for javascript
-let javaScript_fold=1
+" allow syntax folding for javascript
+function! JavaScriptFold()
+    setl foldmethod=syntax
+    setl foldlevelstart=1
+    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+
+    function! FoldText()
+        return substitute(getline(v:foldstart), '{.*', '{...}', '')
+    endfunction
+    setl foldtext=FoldText()
+endfunction
+au FileType javascript call JavaScriptFold()
 
 
 

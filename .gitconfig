@@ -10,7 +10,7 @@
   ui = always
 
 [merge]
-  tool = kdiff3
+  tool = mvim -d
 
 [color "status"]
   added = green
@@ -18,6 +18,8 @@
   untracked = cyan
 
 [alias]
+  dc30 = !git config user.name dc30 && git config user.email dciccale@aurigae.com
+  # log git history tree graph
   l = log --graph --decorate
   # log edited files per commit
   ll = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]' --decorate --numstat
@@ -30,6 +32,7 @@
   grep = grep -Ii
   s = status -sb
   co = commit
+  coam = commit --amend
   # commit with message
   cm = commit -m
   cam = commit -am
@@ -42,18 +45,35 @@
   # for github pages
   chp = checkout gh-pages
   chm = checkout master
+  chd = checkout develop
   br = branch
+  brd = branch -D
   ph = push origin
   pl = pull origin
   mnoff = merge --no-ff
   unstage = reset HEAD
   sh = stash
+  shl = stash list
   unsh = stash pop
   rv = remote -v
   ra = remote add
+  # quick ignore
+  ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
+  # get list of committers without including merge commits
+  committers = shortlog -nse --no-merges
+  # add all files and untrack removed files
+  addrm = !git add -A && git ls-files --deleted -z | xargs -0 git rm
+
   # project specific
-  bug = !git checkout -b bug/$1
-  feature = !git checkout -b feature/$1
+  # git bug <number>
+  bug = !sh -c 'git checkout -b bug/$0'
+  chb = !sh -c 'git checkout bug/$0'
+  # git feature <number>
+  feature = !sh -c 'git checkout -b feature/$0'
+  chf = !sh -c 'git checkout feature/$0'
+  # git task <number>
+  task = !sh -c 'git checkout -b task/$0'
+  cht = !sh -c 'git checkout task/$0'
   goto = !git stash --quiet && git checkout $1 | printf '\n\n'$(tput setaf 4) && printf '\n\n' $(tput sgr0)
 
 # url shortcuts
