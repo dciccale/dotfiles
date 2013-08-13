@@ -51,6 +51,9 @@ augroup line_return
       \ endif
 augroup end
 
+au BufRead,BufNewFile *.tpl set ft=underscore_template
+au BufRead .aliases set ft=sh
+
 " use unix as standard file type
 set fileformats=unix,dos,mac
 
@@ -361,7 +364,7 @@ nmap N Nzz
 " TERMINAL
 " ==================================================
 
-let s:txtwidth=120
+let s:txtwidth=80
 
 " limit textwidth
 exe 'set textwidth=' . s:txtwidth

@@ -25,3 +25,27 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias simulator='open /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/De‌​veloper/Applications/iPhone\ Simulator.app'
+
+# Create cocos2d-x multi-platform project
+cocos2dproj() {
+  if [[ -z "$1" || -z "$2" ]]; then
+    echo "provide project and package name"
+    return 0
+  fi
+  if [ -z "$3" ]; then
+    LANG="cpp"
+  else
+    LANG="$3"
+  fi
+  cd ~/Downloads/cocos2d-x-2.1.4/tools/project-creator/
+  python create_project.py -project $1 -package $2 -language ${LANG}
+  cd ../../projects/$1
+  open .
+}
+alias cocos2dproj=cocos2dproj
+
+cleanxcode() {
+  cd ~/Library/Developer/Xcode/DerivedData/
+  rm -rf *
+}
+alias cleanxcode=cleanxcode
