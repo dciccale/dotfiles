@@ -1,0 +1,7 @@
+/*
+ * Template file
+ */
+
+'use strict';
+
+

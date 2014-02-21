@@ -1,33 +1,48 @@
+################################################################################
+# misc
 alias cl="clear"
 alias ex="exit"
 alias ls="ls -G"
 alias c="pygmentize -O style=monokai -f console256 -g"
-
-# Easier navigation
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
+alias mca="cd ~/tidprojects/mca-mobile/"
+alias g="git"
 
 # Quick cd home
 home() {
   cd ~/$@
 }
 alias home=home
-alias reload=". ~/.bashrc"
 
+# Reload bash profile
+reload() {
+  . $MYBASHRC
+  printf "\n${BLUE}.bashrc reloaded!\n${RESET}\n"
+}
+alias reload=reload
 
 # List only directories
 alias lsd='ls -l | grep "^d"'
 
+
+################################################################################
+# Easier navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
+
+################################################################################
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
-alias simulator='open /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/De‌​veloper/Applications/iPhone\ Simulator.app'
 
+
+################################################################################
+# Cocos 2dx
 # Create cocos2d-x multi-platform project
-cocos2dproj() {
+cocos2dxproj() {
   if [[ -z "$1" || -z "$2" ]]; then
     echo "provide project and package name"
     return 0
@@ -42,10 +57,37 @@ cocos2dproj() {
   cd ../../projects/$1
   open .
 }
-alias cocos2dproj=cocos2dproj
+alias cocos2dxproj=cocos2dxproj
 
+
+################################################################################
+# Xcode cleanup
 cleanxcode() {
   cd ~/Library/Developer/Xcode/DerivedData/
   rm -rf *
 }
 alias cleanxcode=cleanxcode
+
+
+################################################################################
+# Blackberry 10 dev shortcuts
+bbdeploy() {
+  /Developer/SDKs/Research\ In\ Motion/BlackBerry\ 10\ WebWorks\ SDK\ 1.0.4.5/ \
+    dependencies/tools/bin/blackberry-deploy -installApp -password $1 -device \
+    $2 -package $3
+}
+alias bbdeploy=bbdeploy
+
+################################################################################
+# Open file in a current opened mac vim or just a new mac vim window
+# command: Run command with arguments ignoring any shell function named command.
+function mvim {
+  if [[ $# > 0 ]]; then
+    command mvim --remote-silent "$@"
+  else
+    command mvim
+  fi
+}
+alias mvim=mvim
+
+export MYALIASES=${HOME}/.aliases

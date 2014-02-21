@@ -2,19 +2,26 @@
 set nocp
 
 
-
-" PLUGINS
+" PLUGINS {{{
 " ==================================================
 
 " my plugins config file path
 let $MYPLUGINS='~/.vim/plugins.vim'
 
+" my .bashrc file
+" let $MYBASHRC='~/.bashrc'
+
+" my .aliases file
+" let $MYALIASES='~/.aliases'
+
+
 " load plugins managed by vundle
-exe 'so ' . $MYPLUGINS
+exec 'so ' . $MYPLUGINS
+
+" }}}
 
 
-
-" GVIMRC
+" GVIMRC {{{
 " ==================================================
 
 " define gvimrc here
@@ -24,35 +31,26 @@ if has('gui_running')
   else
     set guifont=Courier_New:h10:cANSI
   endif
+
+  set guiheadroom=0
+
+  " disable blinking cursor
+  set guicursor+=a:blinkon0
 endif
 
-" disable blinking cursor
-set guicursor=a:blinkon0
+" }}}
 
 
-
-" EDITION
+" EDITION {{{
 " ==================================================
 
 color badwolf
+let g:badwolf_html_link_underline = 0
+let g:badwolf_css_props_highlight = 1
 
 " basic edition stuff on
-syntax on
 filetype on
-filetype plugin on
-filetype indent on
-
-" return to the same line when you reopen a file
-augroup line_return
-  au!
-  au BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \     execute 'normal! g`"zvzz' |
-      \ endif
-augroup end
-
-au BufRead,BufNewFile *.tpl set ft=underscore_template
-au BufRead .aliases set ft=sh
+filetype plugin indent on
 
 " use unix as standard file type
 set fileformats=unix,dos,mac
@@ -70,15 +68,16 @@ set copyindent
 set expandtab
 
 " 2 spaces everywhere please!
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+let g:tabwidth=2
+exec 'set tabstop=' . g:tabwidth
+exec 'set shiftwidth=' . g:tabwidth
+exec 'set softtabstop=' . g:tabwidth
 
 " don't wrap lines
 set nowrap
 
 " show line numbers
-set number
+set relativenumber
 
 " highlight current line
 set cursorline
@@ -90,7 +89,18 @@ set autoread
 set hidden
 
 " allow more tabs
-set tabpagemax=50
+set tabpagemax=30
+
+" always show number of changed lines
+set report=0
+
+set noshowmode
+
+" always show auto complete popup
+set completeopt=menu,preview
+set pumheight=5
+
+set formatoptions+=tn1
 
 " highlight trailing whitespace (and tabs)
 " http://nvie.com/posts/how-i-boosted-my-vim/
@@ -108,8 +118,8 @@ set undolevels=1000
 set synmaxcol=500
 
 " keep selection to indent/outdent
-vnoremap < <gv
-vnoremap > >gv
+vn < <gv
+vn > >gv
 
 " easy indent/outdent
 nn < <<
@@ -118,9 +128,33 @@ nn > >>
 " join lines with cursor staying in place
 nn J mzJ`z
 
+" function! s:RunCodeHelper(property)
+"   :exec "normal! $a,\<CR>'\|i"
+"   " :exec "normal! i\\t"
+"   " :exec "normal! a"
+" endfunction
+" nn <silent> zyp :call RunCodeHelper('property')<cr>
+
+" return to the same line when you reopen a file
+augroup line_return
+  au!
+  au BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exec 'normal! g`"zvzz' |
+      \ endif
+augroup end
+
+au BufRead,BufNewFile *.tpl set ft=underscore_template
+au BufRead .aliases set ft=sh
+au BufRead .apache.conf set ft=apache
+
+" command to capitalize the first letters of comments starting with //
+com! CapitalizeComments :%s/\/\/ \(\w\)\(\w*\)/\/\/ \U\1\L\2/g
+
+" }}}
 
 
-" SCROLLING
+" SCROLLING {{{
 " ==================================================
 
 " show more lines around cursor when at the edge of file
@@ -130,24 +164,31 @@ set sidescrolloff=5
 " scroll viewport faster
 nn <c-e> 5<c-e>
 nn <c-y> 5<c-y>
-vnoremap <c-e> 5<c-e>
-vnoremap <c-y> 5<c-y>
+vn <c-e> 5<c-e>
+vn <c-y> 5<c-y>
 
 " keep cursor in position when moving around
 set nostartofline
 
+" }}}
 
-" MAPPINGS
+
+" MAPPINGS {{{
 " ==================================================
 
 " change the mapleader from \ to ,
 let mapleader=","
+let maplocalleader = "\\"
 
 " - is the new : (i.e. -w to save) faster instead of shift+:
 nn - :
 
 " easy :bd
 map <silent> <leader>bd :bd<cr>
+
+" save session
+map <silent> <leader>ms :mksession! ~/.vim/session.vim<cr>
+map <silent> <leader>ls :so ~/.vim/session.vim<cr>
 
 " delete all buffers
 map <silent> <leader>wp :1,9999bwipeout<cr>
@@ -165,26 +206,29 @@ map <silent> <leader>k :qa!<cr>
 nmap <leader>a ggVG
 
 " select full javascript function
+" (or anything that matchi % can handle)
+" required to be at the same line of the openin symbol (need to improve this)
 nmap <leader>sf V$%
+" select the content inside a function
+nmap <leader>sc [zjV]zk
 
 " force save of files with root permission
-com! W :w !sudo tee %
+com! W :w !sudo tee % > /dev/null
 map <silent> <leader>W :W<cr>
 
 " maximize vim window
-com! Max :let &lines=500<bar>let &columns=500
-map <leader>m :Max<cr>
+map <leader>m :let &lines=500<bar>let &columns=500<cr>
 
 " minimize vim window
 map <leader>n :let &lines=35<bar>let &columns=140<bar>winpos 150 110<cr>
 
 " easy move lines in all modes without losing cursor position
-imap <d-j> <esc>mz:m+<cr>`zi
-imap <d-k> <esc>mz:m-2<cr>`zi
-nmap <d-j> mz:m+<cr>`z
-nmap <d-k> mz:m-2<cr>`z
-vmap <d-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <d-k> :m'<-2<cr>`>my`<mzgv`yo`z
+imap <silent> <d-j> <esc>mz:m+<cr>`zi
+imap <silent> <d-k> <esc>mz:m-2<cr>`zi
+nmap <silent> <d-j> mz:m+<cr>`z
+nmap <silent> <d-k> mz:m-2<cr>`z
+vmap <silent> <d-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <silent> <d-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " easy add new line in normal mode
 " without moving the cursor
@@ -194,8 +238,24 @@ nn <cr> mzo<esc>`z
 " (copy to _ for not losing the last register)
 nn <bs> "_dd
 
-" list current dir files and folders
+" easy ctrl p, list current dir files and folders
 nmap <c-p> :e <c-d>
+
+" navigate explorer
+noremap <silent> <leader>e :Vexplore<cr>
+
+" thanks julien!
+let g:netrw_altv=1
+let g:netrw_banner=0
+let g:netrw_browse_split=4
+let g:netrw_dirhistmax=0
+let g:netrw_keepdir=0
+let g:netrw_winsize=30
+let g:netrw_list_hide='\.DS_Store$,\.git$'
+let g:netrw_chgwin=winnr()
+" see file explorer in tree style
+let g:netrw_liststyle=3
+let g:netrw_fastbrowse=2
 
 " list to open in new tab
 nmap <c-t> :tabedit <c-d>
@@ -203,12 +263,20 @@ nmap <c-t> :tabedit <c-d>
 " leave insert mode and save
 inoremap jj <Esc>:w<cr>
 
-
 " list all buffers
 nmap <c-o> :ls<cr>:e #
 
 " uppercase current word in insert mode
-inoremap <c-u> <esc>mzgUiw`za
+ino <c-u> <esc>mzgUiw`za
+
+" uppercase current visually selected word
+vn <c-u> :<c-u>normal! mzgUiw`za<cr>
+
+" lowercase current word in insert mode
+ino <c-a> <esc>mzguiw`za
+
+" lowercase current visually selected word
+vn <c-u> :<c-u>normal! mzgUiw`za<cr>
 
 " panic!
 nn <f9> mzggg?G`z
@@ -219,71 +287,42 @@ map <leader>rr mz<bar>:retab!<bar>:normal gg=G<cr>`z
 " just retab and save
 map <leader>rt :retab!<bar>:w<cr>
 
-" source current file
-map <silent> <leader>s :so %<cr>
-
 " disable K in normal mode as I type this often and don't use it
 nn K <nop>
 
-" open current file with default app
-map <leader>o :!open %<cr>
-
-
-
-" VUNDLE MAPPINGS
-" ==================================================
-map <leader>bi :BundleInstall<cr>
-map <leader>bc :BundleClean<cr>
-map <leader>bu :BundleUpdate<cr>
-
-
-
-" GUIZOOM MAPPINGS
-" ==================================================
-map <leader>+ :ZoomIn<cr>
-map <leader>- :ZoomOut<cr>
-map <leader>= :ZoomReset<cr>
-
-
-
-" GIT GUTTER CONFIG
-" ==================================================
-let g:gitgutter_all_on_focusgained = 0
-
-" refresh gitgutter
-map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
-
-
-
-" SNIPPETS
-" ==================================================
-
-" edit desired snippet of snipMate
-function! EditSnippet()
-  call inputsave()
-  let type = input('Enter snippets lang ')
-  call inputrestore()
-  let snippetsFileName = type == 'js' ? 'javascript' : type
-  exe ':sp ~/.vim/snippets/' . snippetsFileName . '.snippets'
+" open current url with default browser
+function! s:Open()
+  let l:line = getline('.')
+  let l:uri = matchstr(l:line, '[a-z]*:\/\/[^ >,;]*')
+  if empty(l:uri)
+    let l:uri = expand('%')
+  endif
+  silent exec "!open '" . l:uri . "'"
 endfunction
 
-" fast snippet edit
-map <silent> <leader>se :call EditSnippet()<cr>
+" open URL under cursor or current file in default OS app
+map <silent> <leader>o :call <SID>Open()<cr>
 
-function! Total()
-  let g:S=0
-  :%s/[+-]\d\+/\=Sum(submatch(0))/
-  echo g:S
-endfunction
+" get vim help from for the text under the cursor
+map <leader>h <esc>:help <c-r><c-w><cr>
 
-function! Sum(number)
-  let g:S = g:S + eval(a:number)
-  return a:number
-endfunction
+" map Q to repeat the last recorded macro
+map Q @@
+
+" absolute line numbers in insert mode, relative otherwise for easy movement
+au InsertEnter * set number
+au InsertLeave * set relativenumber
+
+" select inside opening bracket
+map <leader>´ vi{
+
+" indent when paste (http://vim.wikia.com/wiki/Format_pasted_text_automatically)
+" nnoremap p p=`]
+
+" }}}
 
 
-
-" SPLITS
+" SPLITS {{{
 " ==================================================
 
 " always do vertical splits at right side
@@ -300,12 +339,15 @@ augroup cline
   au! WinEnter * set cursorline
 augroup end
 
+" highlight SCM conflict markers
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+
 " easy close window
 map <leader>wc <c-w>c
 
 " move splits around
-nn <leader>sl <c-w><s-h>
-nn <leader>sr <c-w><s-l>
+nn <leader>sl <c-w><s-l>
+nn <leader>sr <c-w><s-h>
 nn <leader>st <c-w><s-k>
 nn <leader>sb <c-w><s-j>
 
@@ -315,10 +357,14 @@ map <silent> <leader>vb :vertical :ball<cr>
 " open existing buffer to the right of the current one
 map <leader>os :ls<cr>:vert sp #
 
+" }}}
 
 
-" TABS
+" TABS {{{
 " ==================================================
+
+" all tabs to buffers
+map <silent> <leader>to :tabo<cr>
 
 " easy close tab
 map <silent> <leader>tc :tabclose<cr>
@@ -329,9 +375,34 @@ map <silent> <leader>tm :tabmove<cr>
 " open all buffers in tabs
 map <silent> <leader>tb :tab :ball<cr>
 
+" let s:old_switchbuf=&switchbuf
+" function! s:TabSwitch(state)
+"
+"   echo "tab enter " . a:state
+"   echo "current " . s:old_switchbuf
+"
+"   " if a:state == 1
+"   "   set switchbuf=usetab
+"   "   nn <silent> <right> :sbnext<cr>
+"   "   nn <silent> <left> :sbprevious<cr>
+"   " elseif a:state == 0
+"   "   set switchbuf=s:old_switchbuf
+"   "   nn <silent> <right> :bnext<cr>
+"   "   nn <silent> <left> :bprev<cr>
+"   " endif
+"
+" endfunction
+
+" augroup tab_switch
+"   au!
+"   au TabEnter * :call <SID>TabSwitch(1)
+"   au TabLeave * :call <SID>TabSwitch(0)
+" augroup END
+
+" }}}
 
 
-" SEARCH
+" SEARCH {{{
 " ==================================================
 
 " ignore case when searching
@@ -351,26 +422,60 @@ nohls
 
 " hide search highlight
 nn <silent> <leader>0 :nohls<cr>
+nn <silent> <esc> :nohls<cr>
 
 " don't move on *
 nn * *<c-o>
+
+" search for visually selected text
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+
+" search for selected word with *
+vn * :<c-u>call <SID>VSetSearch()<cr>//<cr><c-o>
+
+" do a global replace for the word under the cursor in the current buffer
+" an input will be prompted
+function! s:ReplaceHighlightedText()
+  call inputsave()
+  let l:replaceWith = input('Replace with: ')
+  call inputrestore()
+  if (empty(l:replaceWith))
+    return
+  endif
+  exec ":%s//" . l:replaceWith . "/gI"
+endfunction
+
+" use the + sign in normal mode to replace word under the cursor
+" highlight what will be replaced
+nnoremap <silent> + :normal! mz*<cr><bar>:call <SID>ReplaceHighlightedText()<cr>
+    \ <bar>:nohls<cr><bar>:normal! `z<cr>
+
+" mapping to replace visually selected text
+vn <silent> + :normal! mz*<cr><bar>:<c-u>call <SID>VSetSearch()<cr>//<cr><c-o>
+    \ <bar>:call <SID>ReplaceHighlightedText()<cr><bar>:nohls<cr><bar>:normal! `z<cr>
 
 " center search
 nmap n nzz
 nmap N Nzz
 
+" }}}
 
 
-" TERMINAL
+" TERMINAL {{{
 " ==================================================
 
-let s:txtwidth=80
+let s:txtwidth=100
 
 " limit textwidth
-exe 'set textwidth=' . s:txtwidth
+exec 'set textwidth=' . s:txtwidth
 
 " highlight column limit
-exe 'set colorcolumn=' . s:txtwidth
+exec 'set colorcolumn=' . s:txtwidth
 
 " wider number column
 set numberwidth=6
@@ -378,8 +483,8 @@ set numberwidth=6
 " always show status bar
 set laststatus=2
 
-" my status line
-set statusline=\ #%n\ %f\ %m\ %r\ Line\ %l\ %P\ \ Column\ %c%=\ [%{&ff}]\ %{&ft}
+" my status line (using airline now)
+"set statusline=\ #%n\ %f\ %m\ %r\ Line\ %l\ %P\ \ Column\ %c%=\ [%{&ff}]\ %{&ft}
 
 " higher command line
 set cmdheight=2
@@ -388,8 +493,9 @@ set cmdheight=2
 set fillchars=""
 
 " http://items.sjbach.com/319/configuring-vim-right
-set wildmode=longest,list,full
+set wildignore=.git,*.pyc,.DS_Store,*.log
 set wildmenu
+set wildmode=longest,list,full
 
 " set terminal title
 set title
@@ -407,41 +513,48 @@ set shortmess=atI
 " stop annoying noise
 set visualbell
 
-" see file explorer in tree style
-let g:netrw_liststyle=3
-
 " restore messed up vim and splits
-map <f5> :redraw!<cr><c-w>=
+map <f5> :syntax sync fromstart<cr>:redraw!<cr><c-w>=
+
+" }}}
 
 
-
-" FOLDS
+" FOLDS {{{
 " ==================================================
 
-set foldmethod=syntax
+
+augroup ft_javascript
+  au!
+  au FileType javascript setl foldmethod=marker
+  au FileType javascript setl foldmarker={,}
+augroup END
+
+augroup ft_html
+  au!
+  au FileType html setl foldmethod=syntax
+augroup END
+
+augroup ft_vim
+  au!
+  au FileType vim setl foldmethod=marker
+augroup END
 
 " do not fold automatically
-set nofoldenable
+"set nofoldenable
 
-" toggle folds with space bar
-nn <silent> <space> za
+" from http://vim.wikia.com/wiki/Folding
+" toggle folds with space only if inside valid fold method, otherwise use default behaviour
+nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<cr>
+" create custom fold in visual mode when foldmethod=manual or marker
+vn <Space> zf
 
-" allow syntax folding for javascript
-function! JavaScriptFold()
-    setl foldmethod=syntax
-    setl foldlevelstart=1
-    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+" fold everything except the current fold
+nnoremap <leader>z zMzvzz
 
-    function! FoldText()
-        return substitute(getline(v:foldstart), '{.*', '{...}', '')
-    endfunction
-    setl foldtext=FoldText()
-endfunction
-au FileType javascript call JavaScriptFold()
+" }}}
 
 
-
-" NAVIGATION
+" NAVIGATION {{{
 " ==================================================
 
 " make j/k move to next visual line instead of physical line
@@ -471,9 +584,14 @@ imap <c-l> <c-o>l
 nn <silent> <right> :bnext<cr>
 nn <silent> <left> :bprev<cr>
 
+" if in insert mode leavte and run normal mapping"
+ino <silent> <right> <esc><left>:bnext<cr>
+ino <silent> <left> <esc><right>:bprev<cr>
+
+" }}}
 
 
-" AUTOCOMMANDS
+" AUTOCOMMANDS {{{
 " ==================================================
 
 " set this when coffeescript
@@ -488,35 +606,53 @@ au! BufWritePre * :%s/\s\+$//e
 " set current path to current file parent directory for better use of :find
 au! BufEnter * silent! let &path = expand('%:p:h') . '/**'
 
-" enter key goes to error in quickfix window (CoffeeLint fix)
-au! BufWinEnter quickfix nmap <buffer> <enter> :.cc<cr>
+" }}}
 
 
-
-" EDIT/SOURCE VIMRC/PLUGINS
+" EDIT/SOURCE VIMRC/PLUGINS {{{
 " ==================================================
+
+" for coloring an OK in green
+highlight OK guifg=#aeee00
 
 " vimrc
 nmap <leader>ve :split $MYVIMRC<cr>
-nmap <leader>vs :so $MYVIMRC<cr>
+nmap <leader>vs :so $MYVIMRC<cr><bar>:echohl OK<bar>:echo ".vimrc sourced!"<bar>:echohl None<cr>
 
 " plugins.vim
-nmap <leader>pe :exe 'split ' . $MYPLUGINS<cr>
+nmap <leader>pe :split $MYPLUGINS<cr>
+nmap <leader>c mzb~`z
+com! W :w !sudo tee % > /dev/null
+
+" au! BufWritePre $MYPLUGINS :exe 'so ' . $MYPLUGINS<cr><bar>:echo "asd"<cr>
+
+" }}}
+
+" EDIT/SOURCE VIMRC/PLUGINS {{{
+" ==================================================
+
+" edit my .bashrc
+nmap <leader>be :split $MYBASHRC<cr>
+
+" edit my .aliases
+nmap <leader>ae :split $MYALIASES<cr>
+
+" }}}
 
 
-
-" PROJECTS
+" PROJECTS {{{
 " ==================================================
 
 " load projects configs
 let $MYPROJECTS=$HOME . '/.vim/projects.vim'
 if filereadable($MYPROJECTS)
-  exe 'so ' . $MYPROJECTS
+  exec 'so ' . $MYPROJECTS
 endif
 
+" }}}
 
 
-" SPELLING
+" SPELLING {{{
 " ==================================================
 
 " fix my common spelling mistakes
@@ -524,20 +660,88 @@ iab slef self
 iab tihs this
 iab functino function
 iab getElementByID getElementById
+iab siaf iife
+
+" }}}
 
 
-
-" REGISTERS
+" VUNDLE MAPPINGS {{{
 " ==================================================
 
-" may be I will do this and keep only one register (system clipboard)
-" anyway I can't keep track of more than two..
-" http://stackoverflow.com/a/1290230/194630
-"noremap y "*y
-"noremap Y "*Y
-"noremap p "*p
-"noremap P "*P
-"vnoremap y "*y
-"vnoremap Y "*Y
-"vnoremap p "*p
-"vnoremap P "*P
+map <leader>bi :BundleInstall<cr>
+map <leader>bc :BundleClean<cr>
+map <leader>bu :BundleUpdate<cr>
+
+" }}}
+
+
+" GUIZOOM MAPPINGS {{{
+" ==================================================
+
+map <leader>+ :ZoomIn<cr>
+map <leader>- :ZoomOut<cr>
+map <leader>= :ZoomReset<cr>
+
+" }}}
+
+
+" AIRLINE CONFIG {{{
+" ==================================================
+
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#left_sep=' '
+let g:airline#extensions#tabline#left_alt_sep='|'
+let g:airline#extensions#tabline#fnamecollapse=0
+let g:airline#extensions#tabline#fnamemod=':t'
+
+" }}}
+
+
+" GIT GUTTER CONFIG {{{
+" ==================================================
+
+let g:gitgutter_all_on_focusgained = 0
+
+" refresh gitgutter
+map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
+
+" }}}
+
+
+" SNIPPETS CONFIG {{{
+" ==================================================
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" edit desired snipMate snippets for the specified file type
+function! s:EditSnippet()
+  call inputsave()
+  let l:type = input('Enter snippets lang ')
+  call inputrestore()
+  let snippetsFileName = l:type == 'js' ? 'javascript' : l:type
+  if (empty(l:type))
+    return
+  endif
+  exec ':sp ~/.vim/snippets/' . snippetsFileName . '.snippets'
+endfunction
+
+" fast snippet edit
+map <silent> <leader>se :call <SID>EditSnippet()<cr>
+
+" }}}
+
+" MISC STUFF {{{
+" ==================================================
+
+function! s:Total()
+  let g:S=0
+  :%s/[+-]\d\+/\=Sum(submatch(0))/
+  echo g:S
+endfunction
+
+function! s:Sum(number)
+  let g:S = g:S + eval(a:number)
+  return a:number
+endfunction
+
+" }}}
