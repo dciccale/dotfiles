@@ -1,5 +1,5 @@
 [user]
-  name = Denis Ciccale
+  name = dciccale
   email = dciccale@gmail.com
 
 [core]
@@ -17,66 +17,206 @@
   changed = yellow
   untracked = cyan
 
+[push]
+  default = current
+
+[pull]
+  default = current
+
 [alias]
-  dc30 = !git config user.name dc30 && git config user.email dciccale@aurigae.com
+  # CLONE {{{
+  # ----
+
+  cl = clone
+
+  # }}}
+
+  # LOG {{{
+  # ---
+
   # log git history tree graph
   l = log --graph --decorate
+
   # log edited files per commit
   ll = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]' --decorate --numstat
-  # log (hash, relative date, commit, commiter)
+
+  # log (hash - relative date - commit - commiter)
   ld = log --pretty=format:'%C(yellow)%h %C(bold red)%ad%C(reset)%C(red)%d %C(reset)%s%C(blue) [%cn]' --decorate --date=relative
+
+  # }}}
+
+  # DIFF {{{
+  # ----
+
+  # show word diff in the same line
   dif = diff --word-diff
+
+  # show conflicts only
+  diffc = diff --name-only --diff-filter=U
+
+  # }}}
+
+  # SEARCH {{{
+  # ------
+
   # find a file path
   f = !git ls-files | grep -i
+
   # search/grep the entire codebase for a string
   grep = grep -Ii
+
+  # }}}
+
+  # STATUS {{{
+  # ------
+
   s = status -sb
+
+  # }}}
+
+  # COMMIT {{{
+  # ------
+
   co = commit
+
+  # ammnd commit
   coam = commit --amend
+
   # commit with message
   cm = commit -m
   cam = commit -am
+
+  # commit everything
   caam = !git add . && git commit -am
   unc = reset --soft HEAD^
   cp = cherry-pick
+
+  # }}}
+
+  # CHECKOUT {{{
+  # --------
+
   ch = checkout
-  # checkout files
-  chf = checkout --
-  # for github pages
+
+  # some shortucs to checkout common branches
   chp = checkout gh-pages
   chm = checkout master
   chd = checkout develop
+  chw = checkout web
+
+  # }}}
+
+  # BRANCHES {{{
+  # --------
+
   br = branch
+
+  # delete local branch
   brd = branch -D
+
+  # delete remote branch
+  brdr = !git push origin --delete
+
+  # rename the current branch
+  # usage: git rename new_branch_name
+  rename = !git branch -m \"$(git rev-parse --abbrev-ref HEAD)\"
+
+  # }}}
+
+  # push/pull {{{
+  # ---------
+
   ph = push origin
   pl = pull origin
   mnoff = merge --no-ff
   unstage = reset HEAD
+
+  # }}}
+
+  # STASH {{{
+  # -----
+
   sh = stash
   shl = stash list
   unsh = stash pop
+
+  # if no arguments clear the stash
+  # or drop multiple stashes passing the numbers
+  # usage: git shd 2 5 6 9
+  shd = "!f() { !(($#)) && git stash clear || for ((i=1;i<=$#;i++)); do n=$((${!i}+1-$i)); git stash drop stash@{$n} & done; wait; }; f"
+
+  # show specified stash changes
+  # usage: git shs 3
+  shs = !sh -c 'git stash show -p stash@{$0}'
+
+  # }}}
+
+
+  # REMOTE {{{
+  # ------
+
+  r = remote
   rv = remote -v
   ra = remote add
-  # quick ignore
-  ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
-  # get list of committers without including merge commits
-  committers = shortlog -nse --no-merges
-  # add all files and untrack removed files
-  addrm = !git add -A && git ls-files --deleted -z | xargs -0 git rm
 
-  # project specific
-  # git bug <number>
-  bug = !sh -c 'git checkout -b bug/$0'
-  chb = !sh -c 'git checkout bug/$0'
-  # git feature <number>
-  feature = !sh -c 'git checkout -b feature/$0'
-  chf = !sh -c 'git checkout feature/$0'
-  # git task <number>
-  task = !sh -c 'git checkout -b task/$0'
-  cht = !sh -c 'git checkout task/$0'
+  # }}}
+
+  # quick ignore {{{
+  ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
+
+  # add all files and untrack locally deleted files
+  addrm = !git add -A && git ls-files -d -z | xargs -0 git rm
+
+  # git untrack locally deleted files
+  untrack = !git ls-files -d -z | xargs -0 git rm
+
+  # }}}
+
+  # MISC {{{
+  # ----
+
+  # jump to specify branch but first doing a git stash
   goto = !git stash --quiet && git checkout $1 | printf '\n\n'$(tput setaf 4) && printf '\n\n' $(tput sgr0)
 
-# url shortcuts
+  # get list of committers without including merge commits
+  committers = shortlog -nse --no-merges
+
+  # init a git repository in github
+  initgithub = !git init && git add . && git commit -am 'Initial commit' && git remote add origin git@github.com:dciccale/$(basename $PWD).git && git push -u origin master
+
+  # }}}
+
+  # project specific {{{
+  # ----------------
+
+  # git bug <number>
+  bug = !sh -c 'git checkout -b bug/ENJOYGIVEMEFIVE-$0'
+  chb = !sh -c 'git checkout bug/ENJOYGIVEMEFIVE-$0'
+  brdb = !sh -c 'git branch -D bug/ENJOYGIVEMEFIVE-$0'
+
+  # git feature <number>
+  feature = !sh -c 'git checkout -b feature/ENJOYGIVEMEFIVE-$0'
+  chf = !sh -c 'git checkout feature/$0'
+  chfe = !sh -c 'git checkout feature/ENJOYGIVEMEFIVE-$0'
+  chfg = !sh -c 'git checkout feature/GO-$0'
+  brdf = !sh -c 'git branch -D feature/ENJOYGIVEMEFIVE-$0'
+
+  # git task <number>
+  task = !sh -c 'git checkout -b task/ENJOYGIVEMEFIVE-$0'
+  cht = !sh -c 'git checkout task/ENJOYGIVEMEFIVE-$0'
+  brdt = !sh -c 'git branch -D task/ENJOYGIVEMEFIVE-$0'
+
+  # set my work username and email
+  dc30 = !git config user.name dc30 && git config user.email dciccale@aurigae.com
+
+  # set my personal username and email
+  dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com
+
+  # }}}
+
+# URL SHORTCUTS {{{
+# -------------
+
 [url "http://github.com/"]
   insteadOf = "gh:"
 
@@ -97,8 +237,4 @@
 [url "git@pdihub.hi.inet:dc30/"]
   insteadOf = "dc30:"
 
-[push]
-  default = current
-
-[pull]
-  default = current
+# }}}
