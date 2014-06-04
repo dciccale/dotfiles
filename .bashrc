@@ -17,7 +17,7 @@ BLUE="$(tput setaf 4)"
 RESET="$(tput sgr0)"
 
 # load bash aliases
-if [ -f ~/.aliases ]; then . ~/.aliases; fi
+if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 
 export MOAI_BIN="${HOME}/Downloads/moai-sdk/bin/osx"
 PATH=/usr/local/mysql/bin:$PATH
