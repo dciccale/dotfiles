@@ -1,10 +1,14 @@
+# vim: ft=sh
+
+# Set
 ################################################################################
-# misc
+# MISC
 alias cl="clear"
 alias ex="exit"
 alias ls="ls -G"
 alias c="pygmentize -O style=monokai -f console256 -g"
 alias mca="cd ~/tidprojects/mca-mobile/"
+alias msf="cd ~/Work/vectorsf/MSF/"
 alias g="git"
 
 # Quick cd home
@@ -13,15 +17,14 @@ home() {
 }
 alias home=home
 
-# Reload bash profile
-reload() {
-  . $MYBASHRC
-  printf "\n${BLUE}.bashrc reloaded!\n${RESET}\n"
-}
-alias reload=reload
+# Reloads my bashrc
+alias reload='. $MYBASHRC; printf "\n${BLUE}.bashrc reloaded!\n${RESET}"'
+
+# Go back to previous path
+alias back="cd - &>/dev/null"
 
 # List only directories
-alias lsd='ls -l | grep "^d"'
+alias lsd="ls -d */"
 
 
 ################################################################################
@@ -81,7 +84,7 @@ alias bbdeploy=bbdeploy
 ################################################################################
 # Open file in a current opened mac vim or just a new mac vim window
 # command: Run command with arguments ignoring any shell function named command.
-function mvim {
+mvim() {
   if [[ $# > 0 ]]; then
     command mvim --remote-silent "$@"
   else
@@ -89,5 +92,3 @@ function mvim {
   fi
 }
 alias mvim=mvim
-
-export MYALIASES=${HOME}/.aliases
