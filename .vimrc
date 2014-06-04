@@ -92,6 +92,8 @@ set report=0
 
 set noshowmode
 
+syntax on
+
 " always show auto complete popup
 set completeopt=menu,preview
 set pumheight=5
@@ -346,12 +348,16 @@ augroup end
 " highlight SCM conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
 
+" Shrink the current window to fit the number of lines in the buffer.  Useful
+" for those buffers that are only a few lines
+nmap <silent> ,sw :execute ":resize " . line('$')<cr>
+
 " easy close window
 map <leader>wc <c-w>c
 
 " move splits around
-nn <leader>sl <c-w><s-l>
-nn <leader>sr <c-w><s-h>
+nn <leader>sl <c-w><s-h>
+nn <leader>sr <c-w><s-l>
 nn <leader>st <c-w><s-k>
 nn <leader>sb <c-w><s-j>
 
@@ -359,7 +365,7 @@ nn <leader>sb <c-w><s-j>
 map <silent> <leader>vb :vertical :ball<cr>
 
 " open existing buffer to the right of the current one
-map <leader>os :ls<cr>:vert sp #
+map <leader>so :ls<cr>:vert sp #
 
 " }}}
 
@@ -526,6 +532,7 @@ map <f5> :syntax sync fromstart<cr>:redraw!<cr><c-w>=
 " FOLDS {{{
 " ==================================================
 
+set foldopen+=jump
 
 augroup ft_javascript
   au!
@@ -606,7 +613,6 @@ au! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 
 " .md extension is markdown
 au! BufNewFile,BufRead *.md set ft=markdown
-
 
 " remove unwanted trailling spaces on save
 au! BufWritePre * :%s/\s\+$//e
@@ -792,3 +798,6 @@ let b_num = len(b_unl)
 
 " Or... All at once
 let b_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+
+highlight WhitespaceEOL ctermbg=Red guibg=#F92672
+match WhitespaceEOL /\s\+$/
