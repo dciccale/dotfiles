@@ -8,13 +8,6 @@ set nocp
 " my plugins config file path
 let $MYPLUGINS='~/.vim/plugins.vim'
 
-" my .bashrc file
-" let $MYBASHRC='~/.bashrc'
-
-" my .aliases file
-" let $MYALIASES='~/.aliases'
-
-
 " load plugins managed by vundle
 exec 'so ' . $MYPLUGINS
 
@@ -44,12 +37,14 @@ endif
 " EDITION {{{
 " ==================================================
 
-color badwolf
-let g:badwolf_html_link_underline = 0
-let g:badwolf_css_props_highlight = 1
+color lucius
+set background=dark
+" let g:badwolf_html_link_underline = 0
+" let g:badwolf_css_props_highlight = 1
 
 " basic edition stuff on
 filetype on
+syntax on
 filetype plugin indent on
 
 " use unix as standard file type
@@ -76,7 +71,8 @@ exec 'set softtabstop=' . g:tabwidth
 " don't wrap lines
 set nowrap
 
-" show line numbers
+" show relative line numbers (but show the real line number for the line where the cursor is)
+set number
 set relativenumber
 
 " highlight current line
@@ -145,11 +141,16 @@ augroup line_return
 augroup end
 
 au BufRead,BufNewFile *.tpl set ft=underscore_template
-au BufRead .aliases set ft=sh
-au BufRead .apache.conf set ft=apache
+au BufRead,BufNewFile *.dot,*.def set ft=dot
 
 " command to capitalize the first letters of comments starting with //
 com! CapitalizeComments :%s/\/\/ \(\w\)\(\w*\)/\/\/ \U\1\L\2/g
+
+" allow autocomplete of dashed words
+au! InsertEnter *.styl,*.scss :setl isk+=-
+
+" allow moving between dashed words in normal mode
+au! InsertLeave *.styl,*.scss :setl isk-=-
 
 " }}}
 
@@ -272,6 +273,9 @@ ino <c-u> <esc>mzgUiw`za
 " uppercase current visually selected word
 vn <c-u> :<c-u>normal! mzgUiw`za<cr>
 
+" turn current visually selected text into kinda stylus
+vn <c-s> :s/\%V[:;{}]//g<cr>
+
 " lowercase current word in insert mode
 ino <c-a> <esc>mzguiw`za
 
@@ -340,7 +344,7 @@ augroup cline
 augroup end
 
 " highlight SCM conflict markers
-match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
 
 " easy close window
 map <leader>wc <c-w>c
@@ -600,6 +604,10 @@ au! BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 " let vim create a template file based on the file type
 au! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 
+" .md extension is markdown
+au! BufNewFile,BufRead *.md set ft=markdown
+
+
 " remove unwanted trailling spaces on save
 au! BufWritePre * :%s/\s\+$//e
 
@@ -707,7 +715,6 @@ map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 " }}}
 
-
 " SNIPPETS CONFIG {{{
 " ==================================================
 
@@ -718,11 +725,15 @@ function! s:EditSnippet()
   call inputsave()
   let l:type = input('Enter snippets lang ')
   call inputrestore()
-  let snippetsFileName = l:type == 'js' ? 'javascript' : l:type
+  if (l:type == 'js')
+    let l:type = 'javascript'
+  elseif (l:type == 'md')
+    let l:type = 'markdown'
+  endif
   if (empty(l:type))
     return
   endif
-  exec ':sp ~/.vim/snippets/' . snippetsFileName . '.snippets'
+  exec ':sp ~/.vim/snippets/' . l:type . '.snippets'
 endfunction
 
 " fast snippet edit
@@ -730,9 +741,19 @@ map <silent> <leader>se :call <SID>EditSnippet()<cr>
 
 " }}}
 
+" UNDOTREE CONFIG {{{
+" ==================================================
+
+let g:undotree_SplitWidth = 40
+map <leader>u :UndotreeToggle<cr>
+
+" }}}
+
+
 " MISC STUFF {{{
 " ==================================================
 
+" Sum all numbers displayed in each line in a file
 function! s:Total()
   let g:S=0
   :%s/[+-]\d\+/\=Sum(submatch(0))/
@@ -744,4 +765,30 @@ function! s:Sum(number)
   return a:number
 endfunction
 
+" Show syntax highlighting groups for word under cursor
+" nmap <C-S-P> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+com! SynStack :call <SID>SynStack()
+
 " }}}
+
+" elements matrix to object
+" ":%s/\("\w\+",\)\s*\("\w\+",\)\s*\("\([0-9]*\.[0-9]\+\|(\d\+)\)",\)\s*\(\d\+,\)\s*\(\d\+\)/symbol:\1 name:\2 number:\3 x:\4 y:\5/
+
+
+" All 'possible' buffers that may exist
+let g:b_all = range(1, bufnr('$'))
+
+" Unlisted ones
+let b_unl = filter(b_all, 'buflisted(v:val)')
+
+" Number of unlisted ones
+let b_num = len(b_unl)
+
+" Or... All at once
+let b_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
