@@ -4,7 +4,7 @@
 
 [core]
   excludesfile = /Users/Denis/.gitignore
-  editor = mvim -f
+  editor = mvim
 
 [color]
   ui = always
@@ -12,10 +12,22 @@
 [merge]
   tool = mvim -d
 
+[diff]
+  tool = mvimdiff
+
+[difftool "mvimdiff"]
+  prompt = false
+  cmd = mvim -f -d \"$LOCAL\" \"$REMOTE\"
+
 [color "status"]
   added = green
   changed = yellow
   untracked = cyan
+
+[color "branch"]
+  current = magenta
+  local = white
+  remote = cyan
 
 [push]
   default = current
@@ -60,7 +72,7 @@
   # ------
 
   # find a file path
-  f = !git ls-files | grep -i
+  find = !git ls-files | grep -i
 
   # search/grep the entire codebase for a string
   grep = grep -Ii
@@ -162,7 +174,7 @@
   # }}}
 
   # quick ignore {{{
-  ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
+  ignore = !sh -c '([ ! -e .gitignore ] && touch .gitignore) | echo $0 >>.gitignore'
 
   # add all files and untrack locally deleted files
   addrm = !git add -A && git ls-files -d -z | xargs -0 git rm
@@ -182,7 +194,7 @@
   committers = shortlog -nse --no-merges
 
   # init a git repository in github
-  initgithub = !git init && git add . && git commit -am 'Initial commit' && git remote add origin git@github.com:dciccale/$(basename $PWD).git && git push -u origin master
+  initgh = !git init && git add . && git commit -am 'Initial commit' && git remote add origin git@github.com:dciccale/$(basename $PWD).git && git push -u origin master
 
   # }}}
 
@@ -238,3 +250,10 @@
   insteadOf = "dc30:"
 
 # }}}
+
+[submodule "dojo"]
+  url = https://github.com/dojo/dojo.git
+[submodule "esprima"]
+  url = https://github.com/ariya/esprima.git
+[submodule "marked"]
+  url = https://github.com/chjj/marked
