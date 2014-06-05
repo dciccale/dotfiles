@@ -1,24 +1,24 @@
 " plugins managed by vundle
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-au! BufWritePost plugins.vim so ~/.vim/plugins.vim
+au! BufWritePost plugins.vim so %
 
 " Vundle
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
 " COLORSCHEMES {{{
 " ==================================================
 
 " my custom molokai theme (denkai)
-Bundle 'dciccale/denkai.vim'
+Plugin 'dciccale/denkai.vim'
 
 " badwolf colorscheme
-Bundle 'sjl/badwolf'
+" Plugin 'sjl/badwolf'
 
 " lucius colorscheme
-Bundle 'jonathanfilip/lucius'
+Plugin 'jonathanfilip/vim-lucius'
 
 " }}}
 
@@ -27,42 +27,42 @@ Bundle 'jonathanfilip/lucius'
 " ==================================================
 
 " better powerline
-Bundle 'bling/vim-airline'
+Plugin 'bling/vim-airline'
 
 " multiple cursors
-Bundle 'terryma/vim-multiple-cursors'
+Plugin 'terryma/vim-multiple-cursors'
 
 " delimitMate
-Bundle 'Raimondi/delimitMate'
+Plugin 'Raimondi/delimitMate'
 
 " guizoom (easy increase/decrease vim font size)
-Bundle 'dciccale/guizoom.vim'
+Plugin 'dciccale/guizoom.vim'
 
 " matchit (extended % matching)
-Bundle 'matchit.zip'
+Plugin 'matchit.zip'
 
 " supertab
-Bundle 'ervandew/supertab'
+Plugin 'ervandew/supertab'
 
 " see vim's undo branches
-Bundle 'mbbill/undotree'
+Plugin 'mbbill/undotree'
 
 " commenting
-Bundle 'tomtom/tcomment_vim'
+Plugin 'tomtom/tcomment_vim'
 
-Bundle 'tpope/vim-surround'
+Plugin 'tpope/vim-surround'
 
 " SnipMate
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "garbas/vim-snipmate"
-"Bundle "honza/vim-snippets"
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+"Plugin "honza/vim-snippets'
 
 " Easy rename current file
-Bundle 'Rename2'
+Plugin 'Rename2'
 
 " Amazing motion plugin
-Bundle 'Lokaltog/vim-easymotion'
+Plugin 'Lokaltog/vim-easymotion'
 
 " }}}
 
@@ -71,38 +71,37 @@ Bundle 'Lokaltog/vim-easymotion'
 " ==================================================
 
 " better javascript syntax
-Bundle 'JavaScript-syntax'
-"Bundle 'pangloss/vim-javascript'
-"Bundle 'jelera/vim-javascript-syntax'
+Plugin 'JavaScript-syntax'
+"Plugin 'pangloss/vim-javascript'
+"Plugin 'jelera/vim-javascript-syntax'
 
-" AutoCloseTag (need fixes)
-Bundle 'HTML-AutoCloseTag'
+" AutoCloseTag (ypid version has some fixes)
+Plugin 'ypid/HTML-AutoCloseTag'
 
 " Jade syntax highlight
-Bundle 'digitaltoad/vim-jade'
+Plugin 'digitaltoad/vim-jade'
 
 " Stylus syntax highlight
-Bundle 'wavded/vim-stylus'
+Plugin 'wavded/vim-stylus'
 
 " less syntax highlight
-Bundle 'lunaru/vim-less'
+Plugin 'lunaru/vim-less'
 
 " underscore template syntax highlight
-Bundle 'aaronj1335/underscore-templates.vim'
+Plugin 'aaronj1335/underscore-templates.vim'
 
 " CoffeeScript
-Bundle 'kchmck/vim-coffee-script'
+Plugin 'kchmck/vim-coffee-script'
 
 " C++
-Bundle 'octol/vim-cpp-enhanced-highlight'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 
-" BROKEN SINCE VIM 7.4
-" Nice css3 highlight suppot
-" Bundle 'lepture/vim-css'
-Bundle 'hail2u/vim-css3-syntax'
+" Nice css3 highlight suppot (Broken since vim 7.4)
+" Plugin 'lepture/vim-css'
+Plugin 'hail2u/vim-css3-syntax'
 
 " SASS
-Bundle 'cakebaker/scss-syntax.vim'
+Plugin 'cakebaker/scss-syntax.vim'
 
 " }}}
 
@@ -111,6 +110,8 @@ Bundle 'cakebaker/scss-syntax.vim'
 " ==================================================
 
 " Shows git diff in the gutter
-Bundle 'airblade/vim-gitgutter'
+Plugin 'airblade/vim-gitgutter'
 
 " }}}
+
+call vundle#end()
