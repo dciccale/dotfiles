@@ -10,6 +10,13 @@ alias c="pygmentize -O style=monokai -f console256 -g"
 alias mca="cd ~/tidprojects/mca-mobile/"
 alias msf="cd ~/Work/vectorsf/MSF/"
 alias g="git"
+alias sk="cd ~/git/StocKick/"
+
+# Create a dir and cd into it
+md () {
+  mkdir -p "$@" && cd "$_";
+}
+alias md=md
 
 # Quick cd home
 home() {
