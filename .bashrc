@@ -29,6 +29,9 @@ PATH=${HOME}/tizen-sdk/tools/ide/bin:$PATH
 PATH=${HOME}/ant/bin:$PATH
 PATH=/usr/local/php5/bin:$PATH
 
+export MONGO_PATH=/usr/local/mongodb
+export PATH=$PATH:$MONGO_PATH/bin
+
 . ~/.rvm/scripts/rvm
 
 function parse_git_dirty() {
@@ -73,7 +76,7 @@ export GIT_CONFIG=${HOME}/.gitconfig
 export MYBASHRC=${HOME}/.bashrc
 
 # Export my .aliases file path
-export MYALIASES=${HOME}/.aliases
+export MYALIASES=${HOME}/.bash_aliases
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
