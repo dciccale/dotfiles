@@ -773,13 +773,21 @@ endfunction
 
 " Show syntax highlighting groups for word under cursor
 " nmap <C-S-P> :call <SID>SynStack()<CR>
-function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-com! SynStack :call <SID>SynStack()
+" function! <SID>SynStack()
+"   if !exists("*synstack")
+"     return
+"   endif
+"   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+" endfunc
+" com! SynStack :call <SID>SynStack()
+
+" function! <SID>SynStack()
+"   if !exISTS("*synstack")
+"     return
+"   endif
+"   echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">" . " FG:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
+" endfunc
+" nmap <C-S-P> :call <SID>SynStack()<CR>
 
 " }}}
 
