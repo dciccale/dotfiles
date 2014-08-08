@@ -1,21 +1,19 @@
-snippet log
-	console.log ${1}
-
 snippet ()->
 	(${1}) ->
-	  ${2}
-
+		${2}
 snippet #
 	# ${1}
-
 snippet try
 	try
-	  ${1}
+		${1}
 	catch ${2:e}
-	  ${3}
-
+		${3}
 snippet forin
 	${1:var} for $1 in ${2}
-
 snippet forof
 	${1:var} for $1 in ${2}
+snippet des
+	describe '${1}', ->
+		${2}
+snippet log
+	console.log '${1}'

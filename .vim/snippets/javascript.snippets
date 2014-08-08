@@ -1,20 +1,128 @@
 snippet log
-	console.log
-
-# get elements by tagname
-snippet gettag
-	getElementsByTagName('${1}')${2}
-
-# get element by id
-snippet getid
-	getElementById('${1}')${2}
-
-# get elements by class
-snippet getclass
-	getElementsByClassName('${1}')${2}
-
-# self invoking anonymous function
-snippet siaf
+	console.log(${0});
+snippet iife
 	(function () {
-	  ${1}
-	}())
+		${1}
+	}());
+snippet debug
+	debugger;
+snippet fn
+	function (${1}) {
+		${2}
+	}
+snippet f,
+	function () {
+		${1}
+	},
+snippet f;
+	function () {
+		${1}
+	};
+snippet define
+	define([
+		'${1}'
+	], function (${2}) {
+		${3}
+	});
+snippet defineView
+	define([
+		'backbone',
+		'text!templates/${1}'
+	], function (Backbone, ${2:template}) {
+
+		var View = Backbone.View.extend({
+			template: _.template($2),
+
+			${3}
+		});
+
+		return View;
+	});
+snippet defineBaseView
+	define([
+		'structures/views/baseview',
+		'text!templates/${1}'
+	], function (BaseView, ${2:template}) {
+
+		var View = BaseView.extend({
+			template: _.template($2),
+
+			${3}
+		});
+
+		return View;
+	});
+snippet defineModel
+	define([
+		'backbone'
+	], function (Backbone) {
+
+		var Model = Backbone.Model.extend({
+			${1}
+		});
+
+		return Model;
+	});
+snippet defineCollection
+	define([
+		'backbone',
+		'models/${1:model}'
+	], function (Backbone, ${2:$1}Model) {
+
+		var Collection = Backbone.Collection.extend({
+			model: $2Model,
+
+			${3}
+		});
+
+		return Collection;
+	});
+snippet defineCollectionView
+	define([
+		'backbone',
+		'collections/${1}'
+	], function (Backbone, ${2:$1}Collection) {
+
+		var CollectionView = Backbone.CollectionView.extend({
+			collection: $2Collection,
+
+			${3}
+		});
+
+		return CollectionView;
+	});
+snippet defineAndamioView
+	define([
+		'andamio',
+		'text!templates/${1}'
+	], function (Andamio, ${2:template}) {
+
+		var View = Andamio.View.extend({
+			template: _.template($2)
+		});
+
+		return View;
+	});
+snippet defineAndamioModel
+	define([
+		'andamio'
+	], function (Andamio) {
+
+		var Model = Andamio.Model.extend({
+			${1}
+		});
+
+		return Model;
+	});
+snippet tt
+	var that = this;
+snippet getid
+	document.getElementById('${1}')${2}
+snippet test
+	/${1}/.test(${2})
+snippet instanceof
+	${1} instanceof ${2}
+snippet for "for (...) {...} (counting up)" b
+	for (var ${1:i} = 0, ${2:len} = ${3:Things.length}; $1 < $2; $1++) {
+		${VISUAL}$0
+	}

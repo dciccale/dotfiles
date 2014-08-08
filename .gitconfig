@@ -139,6 +139,7 @@
   # ---------
 
   ph = push origin
+  hh = push heroku master
   pl = pull origin
   mnoff = merge --no-ff
   unstage = reset HEAD
