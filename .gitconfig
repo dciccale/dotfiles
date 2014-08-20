@@ -144,6 +144,14 @@
   mnoff = merge --no-ff
   unstage = reset HEAD
 
+  # fetch and rebase
+  # if not arguments passed, the command executed will be git fetch origin <current-branch>
+  # usage:
+  # git get
+  # or
+  # git get someOrigin someBranch
+  get = "!f() { !(($#)) && git fetch origin $(git rev-parse --abbrev-ref HEAD) || (git fetch $1 $2 && git rebase $1/$2) }; f"
+
   # }}}
 
   # STASH {{{
