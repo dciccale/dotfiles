@@ -148,8 +148,9 @@
   # if not arguments passed, the command executed will be git fetch origin <current-branch>
   # usage:
   # git get
+  # or
   # git get someOrigin someBranch
-  get = "!f() { !(($#)) && git fetch origin $(git rev-parse --abbrev-ref HEAD) || (git fetch $1 $2 && git rebase $1/$2) }; f"
+  get = "!f() { o=origin && (($#)) && o=$1; b=$(git rev-parse --abbrev-ref HEAD) && (($#>1)) && b=$2; (git fetch $o $b && git rebase $o/$b) }; f"
 
   # }}}
 
