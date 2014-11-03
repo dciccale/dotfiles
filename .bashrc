@@ -22,17 +22,21 @@ if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 export MOAI_BIN="${HOME}/Downloads/moai-sdk/bin/osx"
 PATH=/usr/local/mysql/bin:$PATH
 PATH=$MOAI_BIN:$PATH
-PATH=/usr/local/git/bin:/usr/local/sbin:$PATH
+PATH=/usr/local/git/bin:$PATH
 PATH=/usr/local/bin:$PATH
-PATH=${HOME}/.rvm/bin:$PATH
 PATH=${HOME}/tizen-sdk/tools/ide/bin:$PATH
 PATH=${HOME}/ant/bin:$PATH
 PATH=/usr/local/php5/bin:$PATH
+PATH=/usr/local/sbin:$PATH
 
-export MONGO_PATH=/usr/local/mongodb
-export PATH=$PATH:$MONGO_PATH/bin
+PATH=$PATH:/usr/local/go/bin
+GOROOT=$HOME/go
+PATH=$PATH:$GOROOT/bin
+GOPATH=${HOME}/go
+PATH=$GOPATH:$PATH;
 
-. ~/.rvm/scripts/rvm
+# PATH=${HOME}/.rvm/bin:$PATH
+# . ~/.rvm/scripts/rvm
 
 function parse_git_dirty() {
   git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "*"
@@ -68,9 +72,6 @@ PS2="\[${RED}\]❯\[${RESET}\] "
 # Set sdb environment path
 export PATH=$PATH:${HOME}/tizen-sdk/tools
 ## End Tizen SDK configuration
-
-# Export easy way to open my gitconfig
-export GIT_CONFIG=${HOME}/.gitconfig
 
 # Export my .bashrc file path
 export MYBASHRC=${HOME}/.bashrc

@@ -61,6 +61,7 @@ mvim() {
   fi
 }
 alias mvim=mvim
+alias m=mvim
 
 ################################################################################
 # MISC
@@ -94,3 +95,4 @@ alias mca="cd ~/tidprojects/mca-mobile/"
 alias msf="cd ~/Work/vectorsf/MSF/"
 alias g="git"
 alias sk="cd ~/git/StocKick/"
+alias apachelogs="tail -f /var/log/apache2/error_log"

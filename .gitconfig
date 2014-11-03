@@ -1,10 +1,13 @@
 [user]
-  name = dciccale
+  name = Denis Ciccale
   email = dciccale@gmail.com
 
 [core]
   excludesfile = /Users/Denis/.gitignore
-  editor = mvim
+  editor = mvim -f
+  quotepath = false
+  precomposeunicode = true
+  autocrlf = input
 
 [color]
   ui = always
@@ -66,13 +69,16 @@
   # show conflicts only
   diffc = diff --name-only --diff-filter=U
 
+  # show cached diff
+  diffca = diff --cached
+
   # }}}
 
   # SEARCH {{{
   # ------
 
   # find a file path
-  find = !git ls-files | grep -i
+  f = !git ls-files | grep -i
 
   # search/grep the entire codebase for a string
   grep = grep -Ii
@@ -91,7 +97,7 @@
 
   co = commit
 
-  # ammnd commit
+  # amend commit
   coam = commit --amend
 
   # commit with message
@@ -100,6 +106,7 @@
 
   # commit everything
   caam = !git add . && git commit -am
+
   unc = reset --soft HEAD^
   cp = cherry-pick
 
@@ -139,7 +146,6 @@
   # ---------
 
   ph = push origin
-  hh = push heroku master
   pl = pull origin
   mnoff = merge --no-ff
   unstage = reset HEAD
@@ -185,7 +191,7 @@
   # }}}
 
   # quick ignore {{{
-  ignore = !sh -c '([ ! -e .gitignore ] && touch .gitignore) | echo $0 >>.gitignore'
+  ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo >> .gitignore
 
   # add all files and untrack locally deleted files
   addrm = !git add -A && git ls-files -d -z | xargs -0 git rm
@@ -212,25 +218,10 @@
   # project specific {{{
   # ----------------
 
-  # git bug <number>
-  bug = !sh -c 'git checkout -b bug/ENJOYGIVEMEFIVE-$0'
-  chb = !sh -c 'git checkout bug/ENJOYGIVEMEFIVE-$0'
-  brdb = !sh -c 'git branch -D bug/ENJOYGIVEMEFIVE-$0'
-
-  # git feature <number>
-  feature = !sh -c 'git checkout -b feature/ENJOYGIVEMEFIVE-$0'
-  chf = !sh -c 'git checkout feature/$0'
-  chfe = !sh -c 'git checkout feature/ENJOYGIVEMEFIVE-$0'
-  chfg = !sh -c 'git checkout feature/GO-$0'
-  brdf = !sh -c 'git branch -D feature/ENJOYGIVEMEFIVE-$0'
-
-  # git task <number>
-  task = !sh -c 'git checkout -b task/ENJOYGIVEMEFIVE-$0'
-  cht = !sh -c 'git checkout task/ENJOYGIVEMEFIVE-$0'
-  brdt = !sh -c 'git branch -D task/ENJOYGIVEMEFIVE-$0'
-
-  # set my work username and email
-  dc30 = !git config user.name dc30 && git config user.email dciccale@aurigae.com
+  plj = pull joaquin regularshipper
+  pljf = pull julien front-end-revolution
+  phj = push joaquin regularshipper
+  phjf = push julien front-end-revolution
 
   # set my personal username and email
   dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com
@@ -261,10 +252,3 @@
   insteadOf = "dc30:"
 
 # }}}
-
-[submodule "dojo"]
-  url = https://github.com/dojo/dojo.git
-[submodule "esprima"]
-  url = https://github.com/ariya/esprima.git
-[submodule "marked"]
-  url = https://github.com/chjj/marked

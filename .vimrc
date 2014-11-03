@@ -84,9 +84,6 @@ set autoread
 " allow hidden buffers
 set hidden
 
-" allow more tabs
-set tabpagemax=30
-
 " always show number of changed lines
 set report=0
 
@@ -190,7 +187,7 @@ nn - :
 map <silent> <leader>bd :bd<cr>
 
 " save session
-map <silent> <leader>ms :mksession! ~/.vim/session.vim<cr>
+map <silent> <leader>is :mksession! ~/.vim/session.vim<cr>
 map <silent> <leader>ls :so ~/.vim/session.vim<cr>
 
 " delete all buffers
@@ -299,7 +296,7 @@ nn K <nop>
 " open current url with default browser
 function! s:Open()
   let l:line = getline('.')
-  let l:uri = matchstr(l:line, '[a-z]*:\/\/[^ >,;]*')
+  let l:uri = matchstr(l:line, '[a-z]*:\/\/[^ >,;"]*')
   if empty(l:uri)
     let l:uri = expand('%')
   endif
@@ -506,6 +503,7 @@ set fillchars=""
 set wildignore=.git,*.pyc,.DS_Store,*.log
 set wildmenu
 set wildmode=longest,list,full
+set infercase
 
 " set terminal title
 set title
@@ -642,6 +640,7 @@ com! W :w !sudo tee % > /dev/null
 
 " }}}
 
+
 " EDIT/SOURCE VIMRC/PLUGINS {{{
 " ==================================================
 
@@ -721,6 +720,7 @@ map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 " }}}
 
+
 " SNIPPETS CONFIG {{{
 " ==================================================
 
@@ -747,11 +747,23 @@ map <silent> <leader>se :call <SID>EditSnippet()<cr>
 
 " }}}
 
+
 " UNDOTREE CONFIG {{{
 " ==================================================
 
 let g:undotree_SplitWidth = 40
 map <leader>u :UndotreeToggle<cr>
+
+" }}}
+
+
+" CTRLP CONFIG {{{
+" ==================================================
+" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|node_modules)$',
+  \ 'file': '\v\.(DS_Store)$',
+  \ }
 
 " }}}
 
@@ -773,27 +785,18 @@ endfunction
 
 " Show syntax highlighting groups for word under cursor
 " nmap <C-S-P> :call <SID>SynStack()<CR>
-" function! <SID>SynStack()
-"   if !exists("*synstack")
-"     return
-"   endif
-"   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-" endfunc
-" com! SynStack :call <SID>SynStack()
-
-" function! <SID>SynStack()
-"   if !exISTS("*synstack")
-"     return
-"   endif
-"   echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">" . " FG:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")
-" endfunc
-" nmap <C-S-P> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+com! SynStack :call <SID>SynStack()
 
 " }}}
 
 " elements matrix to object
 " ":%s/\("\w\+",\)\s*\("\w\+",\)\s*\("\([0-9]*\.[0-9]\+\|(\d\+)\)",\)\s*\(\d\+,\)\s*\(\d\+\)/symbol:\1 name:\2 number:\3 x:\4 y:\5/
-
 
 " All 'possible' buffers that may exist
 let g:b_all = range(1, bufnr('$'))
@@ -807,5 +810,10 @@ let b_num = len(b_unl)
 " Or... All at once
 let b_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 
+" highlight trailing whitespaces
 highlight WhitespaceEOL ctermbg=Red guibg=#F92672
 match WhitespaceEOL /\s\+$/
+
+" save last closed buffer
+au! BufDelete * let last_buffer = expand('%:p')
+map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
