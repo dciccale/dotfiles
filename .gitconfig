@@ -2,6 +2,9 @@
   name = Denis Ciccale
   email = dciccale@gmail.com
 
+[github]
+  user = dciccale
+
 [core]
   excludesfile = /Users/Denis/.gitignore
   editor = mvim -f
@@ -95,8 +98,6 @@
   # COMMIT {{{
   # ------
 
-  co = commit
-
   # amend commit
   coam = commit --amend
 
@@ -142,7 +143,7 @@
 
   # }}}
 
-  # push/pull {{{
+  # PUSH/PULL {{{
   # ---------
 
   ph = push origin
@@ -217,11 +218,6 @@
 
   # project specific {{{
   # ----------------
-
-  plj = pull joaquin regularshipper
-  pljf = pull julien front-end-revolution
-  phj = push joaquin regularshipper
-  phjf = push julien front-end-revolution
 
   # set my personal username and email
   dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com

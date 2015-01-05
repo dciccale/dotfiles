@@ -22,7 +22,7 @@ if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 export MOAI_BIN="${HOME}/Downloads/moai-sdk/bin/osx"
 PATH=/usr/local/mysql/bin:$PATH
 PATH=$MOAI_BIN:$PATH
-PATH=/usr/local/git/bin:$PATH
+PATH=/usr/local/git/bin:/usr/local/sbin:$PATH
 PATH=/usr/local/bin:$PATH
 PATH=${HOME}/tizen-sdk/tools/ide/bin:$PATH
 PATH=${HOME}/ant/bin:$PATH

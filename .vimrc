@@ -37,7 +37,7 @@ endif
 " EDITION {{{
 " ==================================================
 
-color lucius
+color badwolf
 set background=dark
 " let g:badwolf_html_link_underline = 0
 " let g:badwolf_css_props_highlight = 1
