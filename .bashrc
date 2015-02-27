@@ -29,11 +29,9 @@ PATH=${HOME}/ant/bin:$PATH
 PATH=/usr/local/php5/bin:$PATH
 PATH=/usr/local/sbin:$PATH
 
-PATH=$PATH:/usr/local/go/bin
-GOROOT=$HOME/go
-PATH=$PATH:$GOROOT/bin
-GOPATH=${HOME}/go
-PATH=$GOPATH:$PATH;
+export GOROOT="/usr/local/opt/go/libexec"
+export GOPATH="${HOME}/go"
+PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # PATH=${HOME}/.rvm/bin:$PATH
 # . ~/.rvm/scripts/rvm

@@ -37,7 +37,7 @@ endif
 " EDITION {{{
 " ==================================================
 
-color badwolf
+color lucius
 set background=dark
 " let g:badwolf_html_link_underline = 0
 " let g:badwolf_css_props_highlight = 1
@@ -141,6 +141,7 @@ augroup end
 
 au BufRead,BufNewFile *.tpl set ft=underscore_template
 au BufRead,BufNewFile *.dot,*.def set ft=dot
+au BufRead,BufNewFile *.go set nolist
 
 " command to capitalize the first letters of comments starting with //
 com! CapitalizeComments :%s/\/\/ \(\w\)\(\w*\)/\/\/ \U\1\L\2/g
@@ -264,7 +265,8 @@ nmap <c-t> :tabedit <c-d>
 inoremap jj <Esc>:w<cr>
 
 " list all buffers
-nmap <c-o> :ls<cr>:e #
+" nmap <c-o> :ls<cr>:e #
+nmap <c-o> :call BufSel()<cr>
 
 " uppercase current word in insert mode
 ino <c-u> <esc>mzgUiw`za
@@ -381,30 +383,6 @@ map <silent> <leader>tm :tabmove<cr>
 
 " open all buffers in tabs
 map <silent> <leader>tb :tab :ball<cr>
-
-" let s:old_switchbuf=&switchbuf
-" function! s:TabSwitch(state)
-"
-"   echo "tab enter " . a:state
-"   echo "current " . s:old_switchbuf
-"
-"   " if a:state == 1
-"   "   set switchbuf=usetab
-"   "   nn <silent> <right> :sbnext<cr>
-"   "   nn <silent> <left> :sbprevious<cr>
-"   " elseif a:state == 0
-"   "   set switchbuf=s:old_switchbuf
-"   "   nn <silent> <right> :bnext<cr>
-"   "   nn <silent> <left> :bprev<cr>
-"   " endif
-"
-" endfunction
-
-" augroup tab_switch
-"   au!
-"   au TabEnter * :call <SID>TabSwitch(1)
-"   au TabLeave * :call <SID>TabSwitch(0)
-" augroup END
 
 " }}}
 
@@ -817,3 +795,30 @@ match WhitespaceEOL /\s\+$/
 " save last closed buffer
 au! BufDelete * let last_buffer = expand('%:p')
 map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
+
+let g:go_fmt_command = "goimports"
+
+function! BufSel()
+  let bufcount = bufnr("$")
+  let currbufnr = 1
+  let firstmatchingbufnr = 0
+  if (bufcount > 0)
+    echo " Select buffer\r\n -------------"
+    while currbufnr <= bufcount
+      if(bufexists(currbufnr) && buflisted(currbufnr))
+        let space = currbufnr > 9 ? "" : " "
+        echo " " . space . currbufnr . " |  ". fnamemodify(bufname(currbufnr), ':t')
+        let firstmatchingbufnr = currbufnr
+      endif
+      let currbufnr = currbufnr + 1
+    endwhile
+    echo "\r\n"
+  endif
+    let desiredbufnr = input("#")
+    if(strlen(desiredbufnr) != 0)
+      execute ":b ". desiredbufnr
+    endif
+endfunction
+
+"Bind the BufSel() function to a user-command
+" command! -nargs=0 Bs :call BufSel()

@@ -109,4 +109,10 @@ pullrequest() {
 
   open "https://github.com/"$(git config -l|grep remote.origin.url|awk -F "\:" '{print $2}'|awk -F "\/" '{print $1}')"/"$repo"/compare/"$remote":"$branch"..."$(git rev-parse --abbrev-ref HEAD)"?expand=1"
 }
-alias pr=pullrequest
+
+pr() {
+  local repo=`git remote -v | grep -m 1 "(push)" | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/"`
+  local branch=`git name-rev --name-only HEAD`
+  open https://github.com/$repo/pull/new/$branch
+}
+alias pr=pr
