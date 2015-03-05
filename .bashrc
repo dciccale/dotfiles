@@ -36,6 +36,13 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 # PATH=${HOME}/.rvm/bin:$PATH
 # . ~/.rvm/scripts/rvm
 
+export MONGO_PATH=/usr/local/mongodb
+PATH=$PATH:$MONGO_PATH/bin
+
+export DOCKER_CERT_PATH=/Users/Denis/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
+
 function parse_git_dirty() {
   git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "*"
 }
