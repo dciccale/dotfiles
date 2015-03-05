@@ -108,7 +108,9 @@
   # commit everything
   caam = !git add . && git commit -am
 
+  # undo commit
   unc = reset --soft HEAD^
+
   cp = cherry-pick
 
   # }}}
@@ -147,6 +149,7 @@
   # ---------
 
   ph = push origin
+  hh = push heroku master
   pl = pull origin
   mnoff = merge --no-ff
   unstage = reset HEAD
