@@ -735,17 +735,6 @@ map <leader>u :UndotreeToggle<cr>
 " }}}
 
 
-" CTRLP CONFIG {{{
-" ==================================================
-" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|node_modules)$',
-  \ 'file': '\v\.(DS_Store)$',
-  \ }
-
-" }}}
-
-
 " MISC STUFF {{{
 " ==================================================
 
@@ -760,33 +749,6 @@ function! s:Sum(number)
   let g:S = g:S + eval(a:number)
   return a:number
 endfunction
-
-" Show syntax highlighting groups for word under cursor
-" nmap <C-S-P> :call <SID>SynStack()<CR>
-function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-com! SynStack :call <SID>SynStack()
-
-" }}}
-
-" elements matrix to object
-" ":%s/\("\w\+",\)\s*\("\w\+",\)\s*\("\([0-9]*\.[0-9]\+\|(\d\+)\)",\)\s*\(\d\+,\)\s*\(\d\+\)/symbol:\1 name:\2 number:\3 x:\4 y:\5/
-
-" All 'possible' buffers that may exist
-let g:b_all = range(1, bufnr('$'))
-
-" Unlisted ones
-let b_unl = filter(b_all, 'buflisted(v:val)')
-
-" Number of unlisted ones
-let b_num = len(b_unl)
-
-" Or... All at once
-let b_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 
 " highlight trailing whitespaces
 highlight WhitespaceEOL ctermbg=Red guibg=#F92672
@@ -819,6 +781,3 @@ function! BufSel()
       execute ":b ". desiredbufnr
     endif
 endfunction
-
-"Bind the BufSel() function to a user-command
-" command! -nargs=0 Bs :call BufSel()
