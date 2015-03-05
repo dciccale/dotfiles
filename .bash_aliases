@@ -1,44 +1,17 @@
 # vim: ft=sh
 
 ################################################################################
-# MISC
-alias cl="clear"
-alias ex="exit"
-alias ls="ls -G"
-alias c="pygmentize -O style=monokai -f console256 -g"
-alias g="git"
-alias apachelogs="tail -f /var/log/apache2/error_log"
-
-# Quick cd home
-home() {
-  cd ~/$@
-}
-alias home=home
-
-# Reloads my bashrc
-alias reload='. $MYBASHRC; printf "\n${BLUE}.bashrc reloaded!\n${RESET}"'
-
-# Go back to previous path
-alias back="cd - &>/dev/null"
-
-# List only directories
-alias lsd="ls -d */"
-
-
-################################################################################
 # Easier navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-
 ################################################################################
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
-
 
 ################################################################################
 # Cocos 2dx
@@ -60,7 +33,6 @@ cocos2dxproj() {
 }
 alias cocos2dxproj=cocos2dxproj
 
-
 ################################################################################
 # Xcode cleanup
 cleanxcode() {
@@ -68,7 +40,6 @@ cleanxcode() {
   rm -rf *
 }
 alias cleanxcode=cleanxcode
-
 
 ################################################################################
 # Blackberry 10 dev shortcuts
@@ -92,23 +63,36 @@ mvim() {
 alias mvim=mvim
 alias m=mvim
 
-pullrequest() {
-  if [[ $1 == '' ]]; then
-    remote="packlink-dev"
-  else
-    remote=$1
-  fi
+################################################################################
+# MISC
 
-  if [[ $2 == '' ]]; then
-    branch=$(git rev-parse --abbrev-ref HEAD)
-  else
-    branch=$2
-  fi
-
-  repo=$(basename `git rev-parse --show-toplevel`)
-
-  open "https://github.com/"$(git config -l|grep remote.origin.url|awk -F "\:" '{print $2}'|awk -F "\/" '{print $1}')"/"$repo"/compare/"$remote":"$branch"..."$(git rev-parse --abbrev-ref HEAD)"?expand=1"
+# Create a dir and cd into it
+md () {
+  mkdir -p "$@" && cd "$_";
 }
+alias md=md
+
+# Quick cd home
+home() {
+  cd ~/$@
+}
+alias home=home
+
+# Reloads my bashrc
+alias reload='. $MYBASHRC; printf "\n${BLUE}.bashrc reloaded!\n${RESET}"'
+
+# Go back to previous path
+alias back="cd - &>/dev/null"
+
+# List only directories
+alias lsd="ls -d */"
+
+alias cl="clear"
+alias ex="exit"
+alias ls="ls -G"
+alias c="pygmentize -O style=monokai -f console256 -g"
+alias g="git"
+alias apachelogs="tail -f /var/log/apache2/error_log"
 
 pr() {
   local repo=`git remote -v | grep -m 1 "(push)" | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/"`
