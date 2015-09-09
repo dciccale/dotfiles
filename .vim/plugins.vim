@@ -12,13 +12,14 @@ Plugin 'gmarik/Vundle.vim'
 " ==================================================
 
 " my custom molokai theme (denkai)
-" Plugin 'dciccale/denkai.vim'
+Plugin 'dciccale/denkai.vim'
 Plugin 'sjl/badwolf'
 Plugin 'jonathanfilip/vim-lucius'
 Plugin 'whatyouhide/vim-gotham'
-Plugin 'zenorocha/dracula-theme'
+Plugin 'zenorocha/dracula-theme',{'rtp':'vim/'}
 
 " }}}
+"
 
 
 " EDITOR {{{
@@ -67,15 +68,14 @@ Plugin 'Lokaltog/vim-easymotion'
 
 " better javascript syntax
 Plugin 'JavaScript-syntax'
+"Plugin 'pangloss/vim-javascript'
+"Plugin 'jelera/vim-javascript-syntax'
 
 " AutoCloseTag (ypid version has some fixes)
 Plugin 'ypid/HTML-AutoCloseTag'
 
 " Jade syntax highlight
 Plugin 'digitaltoad/vim-jade'
-
-" Stylus syntax highlight
-" Plugin 'wavded/vim-stylus'
 
 " less syntax highlight
 Plugin 'lunaru/vim-less'
@@ -84,7 +84,7 @@ Plugin 'lunaru/vim-less'
 " Plugin 'aaronj1335/underscore-templates.vim'
 
 " CoffeeScript
-" Plugin 'kchmck/vim-coffee-script'
+Plugin 'kchmck/vim-coffee-script'
 
 " C++
 " Plugin 'octol/vim-cpp-enhanced-highlight'
@@ -99,8 +99,20 @@ Plugin 'cakebaker/scss-syntax.vim'
 " GO
 Plugin 'fatih/vim-go'
 
+" Stylus
+Plugin 'wavded/vim-stylus'
+
 " Swift
 " Plugin 'toyamarinyon/vim-swift'
+
+" YAML
+Plugin 'stephpy/vim-yaml'
+
+" Dockerfile
+Plugin 'ekalinin/Dockerfile.vim'
+
+" nginx
+Plugin 'evanmiller/nginx-vim-syntax'
 
 " }}}
 

@@ -37,10 +37,12 @@ endif
 " EDITION {{{
 " ==================================================
 
-color lucius
+" color lucius
+" set background=light
+color denkai
 set background=dark
-" let g:badwolf_html_link_underline = 0
-" let g:badwolf_css_props_highlight = 1
+let g:badwolf_html_link_underline = 0
+let g:badwolf_css_props_highlight = 1
 
 " basic edition stuff on
 filetype on
@@ -84,6 +86,9 @@ set autoread
 " allow hidden buffers
 set hidden
 
+" allow more tabs
+set tabpagemax=30
+
 " always show number of changed lines
 set report=0
 
@@ -110,7 +115,7 @@ match TrailWhitespace /\s\+$\| \+\ze\t/
 set undolevels=1000
 
 " do not syntax highlight too long lines
-set synmaxcol=500
+set synmaxcol=300
 
 " keep selection to indent/outdent
 vn < <gv
@@ -141,7 +146,6 @@ augroup end
 
 au BufRead,BufNewFile *.tpl set ft=underscore_template
 au BufRead,BufNewFile *.dot,*.def set ft=dot
-au BufRead,BufNewFile *.go set nolist
 
 " command to capitalize the first letters of comments starting with //
 com! CapitalizeComments :%s/\/\/ \(\w\)\(\w*\)/\/\/ \U\1\L\2/g
@@ -188,7 +192,7 @@ nn - :
 map <silent> <leader>bd :bd<cr>
 
 " save session
-map <silent> <leader>is :mksession! ~/.vim/session.vim<cr>
+map <silent> <leader>ss :mksession! ~/.vim/session.vim<cr>
 map <silent> <leader>ls :so ~/.vim/session.vim<cr>
 
 " delete all buffers
@@ -298,7 +302,7 @@ nn K <nop>
 " open current url with default browser
 function! s:Open()
   let l:line = getline('.')
-  let l:uri = matchstr(l:line, '[a-z]*:\/\/[^ >,;"]*')
+  let l:uri = matchstr(l:line, '[a-z]*:\/\/[^ >,;]*')
   if empty(l:uri)
     let l:uri = expand('%')
   endif
@@ -697,7 +701,6 @@ let g:gitgutter_all_on_focusgained = 0
 map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 " }}}
-
 
 " SNIPPETS CONFIG {{{
 " ==================================================

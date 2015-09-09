@@ -1,5 +1,4 @@
-# .bashrc
-# Author: Denis Ciccale (@tdecs)
+
 # Source: http://github.com/dciccale/dotfiles/blob/master/.bashrc
 
 export TERM=xterm-256color
@@ -39,9 +38,14 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 export MONGO_PATH=/usr/local/mongodb
 PATH=$PATH:$MONGO_PATH/bin
 
-export DOCKER_CERT_PATH=/Users/Denis/.boot2docker/certs/boot2docker-vm
-export DOCKER_TLS_VERIFY=1
-export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
+# export DOCKER_CERT_PATH=/Users/Denis/.boot2docker/certs/boot2docker-vm
+# export DOCKER_TLS_VERIFY=1
+# export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
+# export DOCKER_IP=$(boot2docker ip 2>/dev/null)
+eval $(docker-machine env default --shell=bash)
+
+export TUTUM_USER=dciccale
+export TUTUM_APIKEY=dbe5f581f5bf160866c61b0a56cd0043407c694f
 
 function parse_git_dirty() {
   git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "*"
@@ -59,6 +63,9 @@ function parse_git_branch() {
 }
 
 function prompt() {
+  # http://apple.stackexchange.com/questions/49835/how-to-make-mac-terminal-restore-working-directories-when-restarting#answer-50334
+  # call default prompt
+  update_terminal_cwd
   LEFT=${PWD/$HOME/'~'} # current dir
   RIGHT=$(parse_git_branch) # git branch
   COLS=$(($(tput cols)-${#LEFT}+${#PURPLE})) # calculated columns
@@ -69,7 +76,8 @@ function prompt() {
 }
 
 PROMPT_COMMAND=prompt
-PS1="\[${DARKGREY}\]❯\[${RESET}\] "
+# PS1="\[${DARKGREY}\]❯\[${RESET}\] "
+PS1="\[${RED}\]❯\[${YELLOW}\]❯\[${GREEN}\]❯\[${RESET}\] "
 PS2="\[${RED}\]❯\[${RESET}\] "
 
 ## Tizen SDK configuration

@@ -67,7 +67,7 @@ alias m=mvim
 # MISC
 
 # Create a dir and cd into it
-md () {
+md() {
   mkdir -p "$@" && cd "$_";
 }
 alias md=md
@@ -100,3 +100,21 @@ pr() {
   open https://github.com/$repo/pull/new/$branch
 }
 alias pr=pr
+
+dockerenter() {
+  docker exec -it $1 bash
+}
+alias docker-enter=dockerenter
+alias fixcam="sudo killall VDCAssistant"
+
+# Print http status every n seconds
+# n defaults to 1s
+# usage: http-ping google.com .5
+http-ping() {
+  n=1 && (($#>1)) && n=$2
+  while true
+  do
+      curl -o /dev/null --silent --head --write-out '%{http_code}\n' $1
+      sleep ${n}
+  done
+}
