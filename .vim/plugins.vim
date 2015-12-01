@@ -66,6 +66,8 @@ Plugin 'Lokaltog/vim-easymotion'
 " SYNTAX {{{
 " ==================================================
 
+Plugin 'elzr/vim-json'
+
 " better javascript syntax
 Plugin 'JavaScript-syntax'
 "Plugin 'pangloss/vim-javascript'
@@ -113,6 +115,9 @@ Plugin 'ekalinin/Dockerfile.vim'
 
 " nginx
 Plugin 'evanmiller/nginx-vim-syntax'
+
+" syntax chek
+Plugin 'scrooloose/syntastic'
 
 " }}}
 

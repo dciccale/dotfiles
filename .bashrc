@@ -38,11 +38,12 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 export MONGO_PATH=/usr/local/mongodb
 PATH=$PATH:$MONGO_PATH/bin
 
-# export DOCKER_CERT_PATH=/Users/Denis/.boot2docker/certs/boot2docker-vm
-# export DOCKER_TLS_VERIFY=1
-# export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
-# export DOCKER_IP=$(boot2docker ip 2>/dev/null)
-eval $(docker-machine env default --shell=bash)
+# export docker variables if it is running
+docker-machine env default &>/dev/null
+IS_DOCKER_RUNNING=$?
+if [ $IS_DOCKER_RUNNING -eq 0 ]; then
+  eval $(docker-machine env default --shell=bash)
+fi
 
 export TUTUM_USER=dciccale
 export TUTUM_APIKEY=dbe5f581f5bf160866c61b0a56cd0043407c694f

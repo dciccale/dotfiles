@@ -46,6 +46,7 @@
   # ----
 
   cl = clone
+  clr = clone --recursive
 
   # }}}
 
@@ -145,17 +146,18 @@
 
   # }}}
 
-  # PUSH/PULL {{{
+  # push/pull {{{
   # ---------
 
   ph = push origin
   hh = push heroku master
   pl = pull origin
-  mnoff = merge --no-ff
+  pls = submodule foreach git pull
+
   unstage = reset HEAD
 
   # fetch and rebase
-  # if not arguments passed, the commands executed will be
+  # if no arguments passed, the command will execute
   # git fetch origin <current-branch>
   # git rebase origin/<current-branc>
   # usage:
@@ -251,3 +253,10 @@
   insteadOf = "dc30:"
 
 # }}}
+
+[submodule "dojo"]
+  url = https://github.com/dojo/dojo.git
+[submodule "esprima"]
+  url = https://github.com/ariya/esprima.git
+[submodule "marked"]
+  url = https://github.com/chjj/marked

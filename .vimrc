@@ -156,6 +156,9 @@ au! InsertEnter *.styl,*.scss :setl isk+=-
 " allow moving between dashed words in normal mode
 au! InsertLeave *.styl,*.scss :setl isk-=-
 
+" activate cursor column in jade for helping with indentation
+au BufEnter,BufRead,BufNewFile *.jade setl cursorcolumn
+
 " }}}
 
 
@@ -737,6 +740,10 @@ map <leader>u :UndotreeToggle<cr>
 
 " }}}
 
+" VIM-JSON
+" ==================================================
+"
+let g:vim_json_syntax_conceal = 0
 
 " MISC STUFF {{{
 " ==================================================
@@ -784,3 +791,24 @@ function! BufSel()
       execute ":b ". desiredbufnr
     endif
 endfunction
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['eslint']
+let syntastic_mode_map = {'passive_filetypes': ['html']}
+
+highlight link markdownH1 PreProc
+highlight link markdownH2 PreProc
+highlight link markdownH3 PreProc
+highlight link markdownLink Character
+highlight link markdownBold String
+highlight link markdownItalic Statement
+highlight link markdownCode Delimiter
+highlight link markdownCodeBlock Delimiter
+highlight link markdownListMarker Delimiter

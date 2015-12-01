@@ -72,6 +72,8 @@ md() {
 }
 alias md=md
 
+alias o=open
+
 # Quick cd home
 home() {
   cd ~/$@
