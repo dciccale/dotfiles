@@ -239,7 +239,6 @@
 
   # set my personal username and email
   dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com
-  ticketchat = !git config user.name denisciccale && git config user.email denis.ciccale@nc43tech.com
 
   # }}}
 
@@ -259,11 +258,5 @@
 
 [url "http://github.com/dciccale/"]
   insteadOf = "gd:"
-
-[url "git@pdihub.hi.inet:"]
-  insteadOf = "pdi:"
-
-[url "git@pdihub.hi.inet:dc30/"]
-  insteadOf = "dc30:"
 
 # }}}
