@@ -62,9 +62,12 @@ mvim() {
 }
 alias mvim=mvim
 alias m=mvim
+alias vim="/Applications/MacVim.app/Contents/MacOS/Vim $*"
 
 ################################################################################
 # MISC
+
+alias title="printf '\033]0;%s\007'"
 
 # Create a dir and cd into it
 md() {
@@ -101,22 +104,25 @@ pr() {
   local branch=`git name-rev --name-only HEAD`
   open https://github.com/$repo/pull/new/$branch
 }
-alias pr=pr
 
-dockerenter() {
-  docker exec -it $1 bash
-}
-alias docker-enter=dockerenter
 alias fixcam="sudo killall VDCAssistant"
 
 # Print http status every n seconds
 # n defaults to 1s
-# usage: http-ping google.com .5
+# usage:
+# http-ping google.com .5 (500 milliseconds)
+# http-ping google.com 2 (2 seconds)
 http-ping() {
   n=1 && (($#>1)) && n=$2
   while true
   do
-      curl -o /dev/null --silent --head --write-out '%{http_code}\n' $1
-      sleep ${n}
+    curl -o /dev/null --silent --head --write-out '%{http_code}\n' $1
+    sleep ${n}
   done
 }
+
+weather() {
+  curl -4 wttr.in/$1
+}
+
+alias welcome="say -v Vicki I am pleased to introduce you to Denis, Co-Founder of Zenfulfillment! give him a warm welcome."

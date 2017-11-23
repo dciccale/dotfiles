@@ -1,4 +1,3 @@
-
 # Source: http://github.com/dciccale/dotfiles/blob/master/.bashrc
 
 export TERM=xterm-256color
@@ -27,6 +26,10 @@ PATH=${HOME}/tizen-sdk/tools/ide/bin:$PATH
 PATH=${HOME}/ant/bin:$PATH
 PATH=/usr/local/php5/bin:$PATH
 PATH=/usr/local/sbin:$PATH
+PATH=${HOME}/.yarn/bin:$PATH
+PATH="$PATH:`yarn global bin`"
+PATH=${HOME}/git/gitinspector:$PATH
+# PATH=~/Downloads/android:$PATH
 
 export GOROOT="/usr/local/opt/go/libexec"
 export GOPATH="${HOME}/go"
@@ -95,3 +98,5 @@ export MYALIASES=${HOME}/.bash_aliases
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+export PATH="$HOME/.yarn/bin:$PATH"

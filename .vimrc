@@ -1,5 +1,4 @@
-" no vi compatibility
-set nocp
+
 
 
 " PLUGINS {{{
@@ -20,7 +19,8 @@ exec 'so ' . $MYPLUGINS
 " define gvimrc here
 if has('gui_running')
   if has('mac')
-    set guifont=Monaco:h12
+    " set guifont=Monaco:h12
+    set guifont=Operator\ Mono\ Book:h14
   else
     set guifont=Courier_New:h10:cANSI
   endif
@@ -37,10 +37,22 @@ endif
 " EDITION {{{
 " ==================================================
 
-" color lucius
+" set background=dark
 " set background=light
-color denkai
-set background=dark
+
+" color lucius
+" let g:lucius_style = "light"
+" let g:lucius_contrast = "high"
+" let g:lucius_contrast_bg = "high"
+" color badwolf
+" color dracula
+" color denkai
+" color space
+color space_modified
+
+" override dracula Search highlight to remove underline and set bg
+hi Search ctermfg=221 ctermbg=NONE cterm=NONE guifg=#282a36 guibg=#8be9fd gui=bold
+
 let g:badwolf_html_link_underline = 0
 let g:badwolf_css_props_highlight = 1
 
@@ -70,6 +82,9 @@ exec 'set tabstop=' . g:tabwidth
 exec 'set shiftwidth=' . g:tabwidth
 exec 'set softtabstop=' . g:tabwidth
 
+" increase line vertical space
+set lsp=2
+
 " don't wrap lines
 set nowrap
 
@@ -87,14 +102,12 @@ set autoread
 set hidden
 
 " allow more tabs
-set tabpagemax=30
+set tabpagemax=0
 
 " always show number of changed lines
 set report=0
 
 set noshowmode
-
-syntax on
 
 " always show auto complete popup
 set completeopt=menu,preview
@@ -117,6 +130,9 @@ set undolevels=1000
 " do not syntax highlight too long lines
 set synmaxcol=300
 
+" remove right-hand scroll bar
+set guioptions-=r
+
 " keep selection to indent/outdent
 vn < <gv
 vn > >gv
@@ -127,13 +143,6 @@ nn > >>
 
 " join lines with cursor staying in place
 nn J mzJ`z
-
-" function! s:RunCodeHelper(property)
-"   :exec "normal! $a,\<CR>'\|i"
-"   " :exec "normal! i\\t"
-"   " :exec "normal! a"
-" endfunction
-" nn <silent> zyp :call RunCodeHelper('property')<cr>
 
 " return to the same line when you reopen a file
 augroup line_return
@@ -158,6 +167,11 @@ au! InsertLeave *.styl,*.scss :setl isk-=-
 
 " activate cursor column in jade for helping with indentation
 au BufEnter,BufRead,BufNewFile *.jade setl cursorcolumn
+
+au BufEnter,BufRead,BufNewFile *.yml setl cursorcolumn
+
+" settings for csv
+au BufEnter,BufRead,BufNewFile *.csv setl tw=0 nowrap
 
 " }}}
 
@@ -199,10 +213,11 @@ map <silent> <leader>ss :mksession! ~/.vim/session.vim<cr>
 map <silent> <leader>ls :so ~/.vim/session.vim<cr>
 
 " delete all buffers
-map <silent> <leader>wp :1,9999bwipeout<cr>
+" map <silent> <leader>wp :1,9999bwipeout<cr>
 
 " quick save
 map <leader>w :w<cr>
+" map <leader>w :%s/\s\+$//e<cr>:w<cr>
 
 " quick quit
 map <silent> <leader>q :q<cr>
@@ -269,11 +284,13 @@ let g:netrw_fastbrowse=2
 nmap <c-t> :tabedit <c-d>
 
 " leave insert mode and save
-inoremap jj <Esc>:w<cr>
+inoremap jj <esc>:w<cr>
+inoremap <tab> <esc>
+vn <tab> <esc>
 
 " list all buffers
 " nmap <c-o> :ls<cr>:e #
-nmap <c-o> :call BufSel()<cr>
+nmap <c-o> :call BufList()<cr>
 
 " uppercase current word in insert mode
 ino <c-u> <esc>mzgUiw`za
@@ -313,7 +330,7 @@ function! s:Open()
 endfunction
 
 " open URL under cursor or current file in default OS app
-map <silent> <leader>o :call <SID>Open()<cr>
+map <silent> <leader>o :call <sid>Open()<cr>
 
 " get vim help from for the text under the cursor
 map <leader>h <esc>:help <c-r><c-w><cr>
@@ -359,7 +376,7 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
 nmap <silent> ,sw :execute ":resize " . line('$')<cr>
 
 " easy close window
-map <leader>wc <c-w>c
+" map <leader>wc <c-w>c
 
 " move splits around
 nn <leader>sl <c-w><s-h>
@@ -428,7 +445,7 @@ function! s:VSetSearch()
 endfunction
 
 " search for selected word with *
-vn * :<c-u>call <SID>VSetSearch()<cr>//<cr><c-o>
+vn * :<c-u>call <sid>VSetSearch()<cr>//<cr><c-o>
 
 " do a global replace for the word under the cursor in the current buffer
 " an input will be prompted
@@ -444,12 +461,12 @@ endfunction
 
 " use the + sign in normal mode to replace word under the cursor
 " highlight what will be replaced
-nnoremap <silent> + :normal! mz*<cr><bar>:call <SID>ReplaceHighlightedText()<cr>
+nnoremap <silent> + :normal! mz*<cr><bar>:call <sid>ReplaceHighlightedText()<cr>
     \ <bar>:nohls<cr><bar>:normal! `z<cr>
 
 " mapping to replace visually selected text
-vn <silent> + :normal! mz*<cr><bar>:<c-u>call <SID>VSetSearch()<cr>//<cr><c-o>
-    \ <bar>:call <SID>ReplaceHighlightedText()<cr><bar>:nohls<cr><bar>:normal! `z<cr>
+vn <silent> + :normal! mz*<cr><bar>:<c-u>call <sid>VSetSearch()<cr>//<cr><c-o>
+    \ <bar>:call <sid>ReplaceHighlightedText()<cr><bar>:nohls<cr><bar>:normal! `z<cr>
 
 " center search
 nmap n nzz
@@ -461,7 +478,7 @@ nmap N Nzz
 " TERMINAL {{{
 " ==================================================
 
-let s:txtwidth=100
+let s:txtwidth=120
 
 " limit textwidth
 exec 'set textwidth=' . s:txtwidth
@@ -503,6 +520,11 @@ set nobackup noswapfile
 " see :h shortmess for the breakdown of what this changes
 set shortmess=atI
 
+" know highlight group of current word
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<cr>
+
 " stop annoying noise
 set visualbell
 
@@ -519,8 +541,7 @@ set foldopen+=jump
 
 augroup ft_javascript
   au!
-  au FileType javascript setl foldmethod=marker
-  au FileType javascript setl foldmarker={,}
+  au FileType javascript setl foldmethod=syntax
 augroup END
 
 augroup ft_html
@@ -533,14 +554,22 @@ augroup ft_vim
   au FileType vim setl foldmethod=marker
 augroup END
 
+augroup ft_php
+  au!
+  au FileType php,xslt setl noexpandtab tabstop=2 shiftwidth=2 nolist
+augroup END
+
 " do not fold automatically
-"set nofoldenable
+set nofoldenable
+" set foldlevel=1
+" set foldenable
+" set foldlevel=1
 
 " from http://vim.wikia.com/wiki/Folding
 " toggle folds with space only if inside valid fold method, otherwise use default behaviour
 nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<cr>
 " create custom fold in visual mode when foldmethod=manual or marker
-vn <Space> zf
+vn <space> zf
 
 " fold everything except the current fold
 nnoremap <leader>z zMzvzz
@@ -565,8 +594,8 @@ map <c-k> <c-w>k
 map <c-l> <c-w>l
 
 " easy tab navigation
-map <s-l> :tabnext<cr>
-map <s-h> :tabprevious<cr>
+" map <s-l> :tabnext<cr>
+" map <s-h> :tabprevious<cr>
 
 " move the cursor in insert mode
 imap <c-h> <c-o>h
@@ -574,13 +603,27 @@ imap <c-j> <c-o>j
 imap <c-k> <c-o>k
 imap <c-l> <c-o>l
 
-" easy buffer navigation with arrow keys
-nn <silent> <right> :bnext<cr>
-nn <silent> <left> :bprev<cr>
+noremap <up> <nop>
+noremap <down> <nop>
+noremap <left> <nop>
+noremap <right> <nop>
 
-" if in insert mode leavte and run normal mapping"
-ino <silent> <right> <esc><left>:bnext<cr>
-ino <silent> <left> <esc><right>:bprev<cr>
+" easy buffer navigation
+" set <c-s-h>=
+" nn <silent> <> :bnext<cr>
+" map ^H <c-s-h>
+" set <F13>=^[H
+" map <F13> <c-s-h>
+" map! <F13> <c-s-h>
+" nn <c-s-h> :bprev<cr>
+
+nn <silent> <c-l> :bnext<cr>
+nn <silent> <c-h> :bprev<cr>
+" nn <silent> <right> :bnext<cr>
+" nn <silent> <left> :bprev<cr>
+" if in insert mode leave and run normal mapping"
+" ino <silent> <right> <esc>:bnext<cr>
+" ino <silent> <left> <esc>:bprev<cr>
 
 " }}}
 
@@ -597,8 +640,11 @@ au! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 " .md extension is markdown
 au! BufNewFile,BufRead *.md set ft=markdown
 
+" vue.js
+au! BufNewFile,BufReadPost *.vue set ft=html
+
 " remove unwanted trailling spaces on save
-au! BufWritePre * :%s/\s\+$//e
+" au! BufWritePre * :%s/\s\+$//e
 
 " set current path to current file parent directory for better use of :find
 au! BufEnter * silent! let &path = expand('%:p:h') . '/**'
@@ -626,14 +672,14 @@ com! W :w !sudo tee % > /dev/null
 " }}}
 
 
-" EDIT/SOURCE VIMRC/PLUGINS {{{
+" EDIT BASH/BASH_ALIASES {{{
 " ==================================================
 
 " edit my .bashrc
-nmap <leader>be :split $MYBASHRC<cr>
+"nmap <leader>be :split $MYBASHRC<cr>
 
 " edit my .aliases
-nmap <leader>ae :split $MYALIASES<cr>
+"nmap <leader>ae :split $MYALIASES<cr>
 
 " }}}
 
@@ -657,8 +703,17 @@ endif
 iab slef self
 iab tihs this
 iab functino function
+iab funciton function
+iab resovle resolve
+iab lgo log
 iab getElementByID getElementById
 iab siaf iife
+iab Promsie Promise
+iab retrun return
+iab conts const
+iab udpate update
+iab tempaltes templates
+iab onlye only
 
 " }}}
 
@@ -666,9 +721,9 @@ iab siaf iife
 " VUNDLE MAPPINGS {{{
 " ==================================================
 
-map <leader>bi :BundleInstall<cr>
-map <leader>bc :BundleClean<cr>
-map <leader>bu :BundleUpdate<cr>
+map <leader>pi :PluginInstall<cr>
+map <leader>pc :PluginClean<cr>
+map <leader>pu :PluginUpdate<cr>
 
 " }}}
 
@@ -681,6 +736,11 @@ map <leader>- :ZoomOut<cr>
 map <leader>= :ZoomReset<cr>
 
 " }}}
+
+" ELM {{{
+" ==================================================
+
+let g:elm_format_autosave = 1
 
 
 " AIRLINE CONFIG {{{
@@ -699,9 +759,6 @@ let g:airline#extensions#tabline#fnamemod=':t'
 " ==================================================
 
 let g:gitgutter_all_on_focusgained = 0
-
-" refresh gitgutter
-map <silent> <leader>rg :call GitGutterToggle()<bar>:call GitGutterToggle()<cr>
 
 " }}}
 
@@ -727,7 +784,7 @@ function! s:EditSnippet()
 endfunction
 
 " fast snippet edit
-map <silent> <leader>se :call <SID>EditSnippet()<cr>
+map <silent> <leader>se :call <sid>EditSnippet()<cr>
 
 " }}}
 
@@ -740,10 +797,26 @@ map <leader>u :UndotreeToggle<cr>
 
 " }}}
 
-" VIM-JSON
+" VIM-JSON {{{
 " ==================================================
-"
+
 let g:vim_json_syntax_conceal = 0
+
+" }}}
+
+" SYNTASTIC {{{
+" ==================================================
+
+" let g:syntastic_javascript_checkers = ['eslint']
+
+" }}}
+
+" JSX {{{
+" ==================================================
+
+let g:jsx_ext_required = 0
+
+" }}}
 
 " MISC STUFF {{{
 " ==================================================
@@ -770,38 +843,28 @@ map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
 
 let g:go_fmt_command = "goimports"
 
-function! BufSel()
+function! BufList()
   let bufcount = bufnr("$")
   let currbufnr = 1
-  let firstmatchingbufnr = 0
+
   if (bufcount > 0)
-    echo " Select buffer\r\n -------------"
+    echo "\n Enter buffer number\n ________________________________\n\n"
     while currbufnr <= bufcount
-      if(bufexists(currbufnr) && buflisted(currbufnr))
-        let space = currbufnr > 9 ? "" : " "
-        echo " " . space . currbufnr . " |  ". fnamemodify(bufname(currbufnr), ':t')
-        let firstmatchingbufnr = currbufnr
+      if (bufexists(currbufnr) && buflisted(currbufnr))
+        let space = currbufnr > 99 ? " " : currbufnr > 9 ? "  " : "   "
+        echo space . currbufnr . "  |  " . fnamemodify(bufname(currbufnr), ':t')
       endif
       let currbufnr = currbufnr + 1
     endwhile
-    echo "\r\n"
+    echo "\n"
   endif
-    let desiredbufnr = input("#")
-    if(strlen(desiredbufnr) != 0)
-      execute ":b ". desiredbufnr
-    endif
+
+  let desiredbufnr = input("#")
+  if (strlen(desiredbufnr) != 0)
+    execute ":b ". desiredbufnr
+  endif
 endfunction
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['eslint']
-let syntastic_mode_map = {'passive_filetypes': ['html']}
 
 highlight link markdownH1 PreProc
 highlight link markdownH2 PreProc
@@ -812,3 +875,8 @@ highlight link markdownItalic Statement
 highlight link markdownCode Delimiter
 highlight link markdownCodeBlock Delimiter
 highlight link markdownListMarker Delimiter
+
+highlight htmlArg gui=italic
+highlight htmlArg cterm=italic
+highlight Comment gui=italic
+highlight Comment cterm=italic

@@ -94,6 +94,9 @@
 
   s = status -sb
 
+  # hide untracked files
+  su = status -sbuno
+
   # }}}
 
   # COMMIT {{{
@@ -126,6 +129,14 @@
   chm = checkout master
   chd = checkout develop
   chw = checkout web
+
+  # }}}
+  #
+  # FETCH/CHECKOUT {{{
+  # --------
+
+  # checkout remote branch
+  chr = !sh -c 'git fetch $0 $1 && git checkout $1'
 
   # }}}
 
@@ -174,6 +185,8 @@
   sh = stash
   shl = stash list
   unsh = stash pop
+
+  unshn = !sh -c 'git stash pop stash@{$0}'
 
   # if no arguments clear the stash
   # or drop multiple stashes passing the numbers
@@ -226,6 +239,7 @@
 
   # set my personal username and email
   dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com
+  ticketchat = !git config user.name denisciccale && git config user.email denis.ciccale@nc43tech.com
 
   # }}}
 
@@ -235,10 +249,10 @@
 [url "http://github.com/"]
   insteadOf = "gh:"
 
-[url "git@github.com:"]
-  insteadOf = "https://github.com/"
-  insteadOf = "http://github.com/"
-  insteadOf = "gh:"
+# [url "git@github.com:"]
+#   insteadOf = "https://github.com/"
+#   insteadOf = "http://github.com/"
+#   insteadOf = "gh:"
 
 [url "git@github.com:dciccale/"]
   insteadOf = "gd:"
@@ -253,10 +267,3 @@
   insteadOf = "dc30:"
 
 # }}}
-
-[submodule "dojo"]
-  url = https://github.com/dojo/dojo.git
-[submodule "esprima"]
-  url = https://github.com/ariya/esprima.git
-[submodule "marked"]
-  url = https://github.com/chjj/marked

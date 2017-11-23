@@ -25,8 +25,15 @@ Plugin 'zenorocha/dracula-theme',{'rtp':'vim/'}
 " EDITOR {{{
 " ==================================================
 
+" improve perf when opening big files
+Plugin 'vim-scripts/LargeFile'
+
+" jump buffers like chrome tabs
+Plugin 'dciccale/vim-chromebuf'
+
 " better powerline
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 " multiple cursors
 Plugin 'terryma/vim-multiple-cursors'
@@ -58,7 +65,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'Rename2'
 
 " Amazing motion plugin
-Plugin 'Lokaltog/vim-easymotion'
+" Plugin 'Lokaltog/vim-easymotion'
 
 " }}}
 
@@ -66,58 +73,73 @@ Plugin 'Lokaltog/vim-easymotion'
 " SYNTAX {{{
 " ==================================================
 
-Plugin 'elzr/vim-json'
+" Plugin 'mxw/vim-jsx'
+" let g:jsx_ext_required = 0
 
-" better javascript syntax
-Plugin 'JavaScript-syntax'
-"Plugin 'pangloss/vim-javascript'
+" Plugin 'pangloss/vim-javascript'
+" Plugin 'mxw/vim-jsx'
+
+" Plugin 'scrooloose/syntastic'
+
+" Plugin 'leafgarland/typescript-vim'
+
+Plugin 'elmcast/elm-vim'
+
+" Plugin 'elixir-lang/vim-elixir'
+
+" Plugin 'elzr/vim-json'
+
+" Plugin 'othree/yajs.vim'
+
+" Plugin 'JavaScript-syntax'
+
 "Plugin 'jelera/vim-javascript-syntax'
 
 " AutoCloseTag (ypid version has some fixes)
-Plugin 'ypid/HTML-AutoCloseTag'
+" Plugin 'ypid/HTML-AutoCloseTag'
 
 " Jade syntax highlight
-Plugin 'digitaltoad/vim-jade'
+" Plugin 'digitaltoad/vim-jade'
 
 " less syntax highlight
-Plugin 'lunaru/vim-less'
+" Plugin 'lunaru/vim-less'
 
 " underscore template syntax highlight
 " Plugin 'aaronj1335/underscore-templates.vim'
 
 " CoffeeScript
-Plugin 'kchmck/vim-coffee-script'
+" Plugin 'kchmck/vim-coffee-script'
 
 " C++
 " Plugin 'octol/vim-cpp-enhanced-highlight'
 
 " Nice css3 highlight suppot (Broken since vim 7.4)
 " Plugin 'lepture/vim-css'
-Plugin 'hail2u/vim-css3-syntax'
+" Plugin 'hail2u/vim-css3-syntax'
 
 " SASS
-Plugin 'cakebaker/scss-syntax.vim'
+" Plugin 'cakebaker/scss-syntax.vim'
 
 " GO
-Plugin 'fatih/vim-go'
+" Plugin 'fatih/vim-go'
 
 " Stylus
-Plugin 'wavded/vim-stylus'
+" Plugin 'wavded/vim-stylus'
 
 " Swift
 " Plugin 'toyamarinyon/vim-swift'
 
 " YAML
-Plugin 'stephpy/vim-yaml'
+" Plugin 'stephpy/vim-yaml'
+
+" PHP
+Plugin 'StanAngeloff/php.vim'
 
 " Dockerfile
-Plugin 'ekalinin/Dockerfile.vim'
+" Plugin 'ekalinin/Dockerfile.vim'
 
 " nginx
-Plugin 'evanmiller/nginx-vim-syntax'
-
-" syntax chek
-Plugin 'scrooloose/syntastic'
+" Plugin 'evanmiller/nginx-vim-syntax'
 
 " }}}
 
