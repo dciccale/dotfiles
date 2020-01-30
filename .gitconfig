@@ -6,7 +6,7 @@
   user = dciccale
 
 [core]
-  excludesfile = /Users/Denis/.gitignore
+  excludesfile = ~/.gitignore
   editor = mvim -f
   quotepath = false
   precomposeunicode = true
@@ -123,6 +123,7 @@
   # --------
 
   ch = checkout
+  cho = !sh -c 'git checkout --orphan $0 && git rm --cache -r .'
 
   # some shortucs to checkout common branches
   chp = checkout gh-pages
@@ -182,11 +183,9 @@
   # STASH {{{
   # -----
 
-  sh = stash
+  sh = "!f() { !(($#)) && git stash || (git stash push -m \"$1\")}; f"
   shl = stash list
-  unsh = stash pop
-
-  unshn = !sh -c 'git stash pop stash@{$0}'
+  unsh = "!f() { !(($#)) && git stash pop || (git stash pop stash@{$1})}; f"
 
   # if no arguments clear the stash
   # or drop multiple stashes passing the numbers
@@ -217,6 +216,14 @@
 
   # git untrack locally deleted files
   untrack = !git ls-files -d -z | xargs -0 git rm
+
+  # }}}
+
+
+  # REBASE {{{
+  # ------
+
+  rb = !sh -c 'git rebase -i HEAD~$0'
 
   # }}}
 
