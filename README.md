@@ -15,14 +15,14 @@ $ git clone https://github.com/dciccale/dotfiles.git ~/
 1 - Install Vundle for plugin management:
 
 ```bash
-$ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+$ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
 
 
 2 - Open vim and run the following command to install the plugins used:
 
 ```
-:BundleInstall
+:PlugInstall
 ```
 
 Or if using my mappings just type `,bi`.
@@ -32,7 +32,7 @@ Or if using my mappings just type `,bi`.
 Each time you want to update any plugin, vundle does it for you, just run this command in vim:
 
 ```
-:BundleUpdate
+:PlugUpdate
 ```
 
 Or if keeping my mappings just do `,bu`.

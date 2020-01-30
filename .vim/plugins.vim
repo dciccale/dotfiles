@@ -6,7 +6,7 @@ call vundle#begin()
 au! BufWritePost plugins.vim so %
 
 " Vundle
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " COLORSCHEMES {{{
 " ==================================================
