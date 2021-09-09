@@ -1,9 +1,17 @@
+snippet exit
+	process.exit
+snippet logp
+	console.log(JSON.stringify(${0}, null, 2))
+snippet pretty
+	JSON.stringify(${0}, null, 2)
+snippet =>
+	() => ${1}
 snippet log
 	console.log(${0});
 snippet iife
-	(function () {
+	(async () => {
 		${1}
-	}());
+	})();
 snippet debug
 	debugger;
 snippet fn
@@ -18,104 +26,11 @@ snippet f;
 	function () {
 		${1}
 	};
-snippet define
-	define([
-		'${1}'
-	], function (${2}) {
-		${3}
-	});
-snippet defineView
-	define([
-		'backbone',
-		'text!templates/${1}'
-	], function (Backbone, ${2:template}) {
-
-		var View = Backbone.View.extend({
-			template: _.template($2),
-
-			${3}
-		});
-
-		return View;
-	});
-snippet defineBaseView
-	define([
-		'structures/views/baseview',
-		'text!templates/${1}'
-	], function (BaseView, ${2:template}) {
-
-		var View = BaseView.extend({
-			template: _.template($2),
-
-			${3}
-		});
-
-		return View;
-	});
-snippet defineModel
-	define([
-		'backbone'
-	], function (Backbone) {
-
-		var Model = Backbone.Model.extend({
-			${1}
-		});
-
-		return Model;
-	});
-snippet defineCollection
-	define([
-		'backbone',
-		'models/${1:model}'
-	], function (Backbone, ${2:$1}Model) {
-
-		var Collection = Backbone.Collection.extend({
-			model: $2Model,
-
-			${3}
-		});
-
-		return Collection;
-	});
-snippet defineCollectionView
-	define([
-		'backbone',
-		'collections/${1}'
-	], function (Backbone, ${2:$1}Collection) {
-
-		var CollectionView = Backbone.CollectionView.extend({
-			collection: $2Collection,
-
-			${3}
-		});
-
-		return CollectionView;
-	});
-snippet defineAndamioView
-	define([
-		'andamio',
-		'text!templates/${1}'
-	], function (Andamio, ${2:template}) {
-
-		var View = Andamio.View.extend({
-			template: _.template($2)
-		});
-
-		return View;
-	});
-snippet defineAndamioModel
-	define([
-		'andamio'
-	], function (Andamio) {
-
-		var Model = Andamio.Model.extend({
-			${1}
-		});
-
-		return Model;
-	});
-snippet tt
-	var that = this;
+snippet ctrl
+	angular.module('${1}')
+		.controller('${2}', ['$scope', function ($scope) {
+			$scope.test = 'test';
+		}]);
 snippet getid
 	document.getElementById('${1}')${2}
 snippet test
@@ -123,6 +38,74 @@ snippet test
 snippet instanceof
 	${1} instanceof ${2}
 snippet for "for (...) {...} (counting up)" b
-	for (var ${1:i} = 0, ${2:len} = ${3:Things.length}; $1 < $2; $1++) {
-		${VISUAL}$0
+	for (let ${1:i} = 0, ${2:l} = ${3:things.length}; $1 < $2; $1++) {
+		${0}
+	}
+snippet class "class name { constructor() {...} }"
+	class ${1} {
+		constructor() {
+				${2}
+		}
+	}
+snippet exp
+	export default ${0}
+snippet r
+	require('${1}');
+snippet write
+	fs.writeFileSync(\`\${__dirname}/${1}\`, ${2})
+snippet read
+	fs.readFileSync(\`\${__dirname}/${1}\`, 'utf8')
+snippet fs
+	const fs = require('fs');
+snippet _
+	const _ = require('lodash');
+snippet b
+	const Promise = require('bluebird');
+snippet m
+	const moment = require('moment');
+snippet tl
+	tap(console.log)
+snippet cl
+	catch(console.log)
+snippet fe
+	finally(process.exit);
+snippet .stop
+	.tap(() => {
+		throw new Error('stop');
+	})
+snippet stop
+	throw new Error('stop');
+snippet .log
+	.tap((res) => {
+		console.log(JSON.stringify(res, null, 2));
+	})
+snippet .tapwrite
+	.tap((res) => {
+		fs.writeFileSync(\`\${__dirname}/res.json\`, JSON.stringify(res, null, 2))
+	})
+snippet csv
+	const csv2json = require('../lib/components/csv2json');
+snippet json
+	const json2csv = require('../lib/components/json2csv');
+snippet time
+	console.time('${0:time}');
+snippet end
+	console.timeEnd('${0:time}');
+snippet delay
+	function delay(ms = 3000) {
+		return new Promise((resolve) =>
+			setTimeout(() => resolve(), ms)
+		);
+	}
+snippet timeout
+	function timeout(ms = 4000) {
+		return new Promise((resolve, reject) =>
+			setTimeout(() => reject(), ms)
+		);
+	}
+snippet try
+	try {
+		${0}
+	} catch (err) {
+		console.log(err);
 	}

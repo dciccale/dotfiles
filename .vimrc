@@ -1,4 +1,5 @@
-
+" no vi compatibility
+set nocp
 
 
 " PLUGINS {{{
@@ -19,8 +20,8 @@ exec 'so ' . $MYPLUGINS
 " define gvimrc here
 if has('gui_running')
   if has('mac')
-    " set guifont=Monaco:h12
     set guifont=Operator\ Mono\ Book:h14
+    set transparency=20
   else
     set guifont=Courier_New:h10:cANSI
   endif
@@ -31,30 +32,13 @@ if has('gui_running')
   set guicursor+=a:blinkon0
 endif
 
-" }}}
-
-
 " EDITION {{{
 " ==================================================
 
-" set background=dark
-" set background=light
-
+set noesckeys
+set background=dark
+color space
 " color lucius
-" let g:lucius_style = "light"
-" let g:lucius_contrast = "high"
-" let g:lucius_contrast_bg = "high"
-" color badwolf
-" color dracula
-" color denkai
-" color space
-color space_modified
-
-" override dracula Search highlight to remove underline and set bg
-hi Search ctermfg=221 ctermbg=NONE cterm=NONE guifg=#282a36 guibg=#8be9fd gui=bold
-
-let g:badwolf_html_link_underline = 0
-let g:badwolf_css_props_highlight = 1
 
 " basic edition stuff on
 filetype on
@@ -82,9 +66,6 @@ exec 'set tabstop=' . g:tabwidth
 exec 'set shiftwidth=' . g:tabwidth
 exec 'set softtabstop=' . g:tabwidth
 
-" increase line vertical space
-set lsp=2
-
 " don't wrap lines
 set nowrap
 
@@ -101,13 +82,12 @@ set autoread
 " allow hidden buffers
 set hidden
 
-" allow more tabs
-set tabpagemax=0
-
 " always show number of changed lines
 set report=0
 
 set noshowmode
+
+syntax on
 
 " always show auto complete popup
 set completeopt=menu,preview
@@ -121,17 +101,18 @@ set list
 set listchars=tab:▸\ ,trail:·
 
 " color trailing whitespace
-hi TrailWhitespace ctermbg=198 guibg=#f62c73
+hi TrailWhitespace ctermbg=Red guibg=#F92672
 match TrailWhitespace /\s\+$\| \+\ze\t/
+
+" highlight trailing whitespaces
+hi WhitespaceEOL ctermbg=Red guibg=#F92672
+match WhitespaceEOL /\s\+$/
 
 " use many undos
 set undolevels=1000
 
 " do not syntax highlight too long lines
 set synmaxcol=300
-
-" remove right-hand scroll bar
-set guioptions-=r
 
 " keep selection to indent/outdent
 vn < <gv
@@ -153,9 +134,6 @@ augroup line_return
       \ endif
 augroup end
 
-au BufRead,BufNewFile *.tpl set ft=underscore_template
-au BufRead,BufNewFile *.dot,*.def set ft=dot
-
 " command to capitalize the first letters of comments starting with //
 com! CapitalizeComments :%s/\/\/ \(\w\)\(\w*\)/\/\/ \U\1\L\2/g
 
@@ -166,12 +144,20 @@ au! InsertEnter *.styl,*.scss :setl isk+=-
 au! InsertLeave *.styl,*.scss :setl isk-=-
 
 " activate cursor column in jade for helping with indentation
-au BufEnter,BufRead,BufNewFile *.jade setl cursorcolumn
+au BufEnter,BufRead,BufNewFile *.jade,*.yml setl cursorcolumn
 
-au BufEnter,BufRead,BufNewFile *.yml setl cursorcolumn
+" allow autocomplete of dashed words
+au! BufEnter,BufRead,BufNewFile *.go setl nolist
 
-" settings for csv
-au BufEnter,BufRead,BufNewFile *.csv setl tw=0 nowrap
+" allow autocomplete of dashed words
+au! BufEnter,BufNewFile,BufRead *.py
+    \ setl tabstop=4 |
+    \ setl nolist |
+    \ setl softtabstop=4 |
+    \ setl shiftwidth=4 |
+    \ setl noexpandtab |
+    \ setl autoindent |
+    \ setl fileformat=unix
 
 " }}}
 
@@ -205,35 +191,27 @@ let maplocalleader = "\\"
 " - is the new : (i.e. -w to save) faster instead of shift+:
 nn - :
 
+" clear trailing whitespaces
+map <leader>cl :%s/\s\+$//e<cr>
+
 " easy :bd
 map <silent> <leader>bd :bd<cr>
 
-" save session
-map <silent> <leader>ss :mksession! ~/.vim/session.vim<cr>
-map <silent> <leader>ls :so ~/.vim/session.vim<cr>
-
-" delete all buffers
-" map <silent> <leader>wp :1,9999bwipeout<cr>
-
 " quick save
 map <leader>w :w<cr>
-" map <leader>w :%s/\s\+$//e<cr>:w<cr>
 
 " quick quit
 map <silent> <leader>q :q<cr>
 
 " force quit (kill vim)
-map <silent> <leader>k :qa!<cr>
+" map <silent> <leader>k :qa!<cr>
 
 " select all
 nmap <leader>a ggVG
 
 " select full javascript function
-" (or anything that matchi % can handle)
 " required to be at the same line of the openin symbol (need to improve this)
 nmap <leader>sf V$%
-" select the content inside a function
-nmap <leader>sc [zjV]zk
 
 " force save of files with root permission
 com! W :w !sudo tee % > /dev/null
@@ -280,17 +258,8 @@ let g:netrw_chgwin=winnr()
 let g:netrw_liststyle=3
 let g:netrw_fastbrowse=2
 
-" list to open in new tab
-nmap <c-t> :tabedit <c-d>
-
 " leave insert mode and save
-inoremap jj <esc>:w<cr>
-inoremap <tab> <esc>
-vn <tab> <esc>
-
-" list all buffers
-" nmap <c-o> :ls<cr>:e #
-nmap <c-o> :call BufList()<cr>
+inoremap jj <Esc>:w<cr>
 
 " uppercase current word in insert mode
 ino <c-u> <esc>mzgUiw`za
@@ -298,14 +267,14 @@ ino <c-u> <esc>mzgUiw`za
 " uppercase current visually selected word
 vn <c-u> :<c-u>normal! mzgUiw`za<cr>
 
-" turn current visually selected text into kinda stylus
-vn <c-s> :s/\%V[:;{}]//g<cr>
-
 " lowercase current word in insert mode
 ino <c-a> <esc>mzguiw`za
 
 " lowercase current visually selected word
-vn <c-u> :<c-u>normal! mzgUiw`za<cr>
+vn <c-a> :<c-u>normal! mzguiw`za<cr>
+
+" turn current visually selected text into kinda stylus
+vn <c-s> :s/\%V[:;{}]//g<cr>
 
 " panic!
 nn <f9> mzggg?G`z
@@ -330,9 +299,9 @@ function! s:Open()
 endfunction
 
 " open URL under cursor or current file in default OS app
-map <silent> <leader>o :call <sid>Open()<cr>
+map <silent> <leader>o :call <SID>Open()<cr>
 
-" get vim help from for the text under the cursor
+" get vim help from the text under the cursor
 map <leader>h <esc>:help <c-r><c-w><cr>
 
 " map Q to repeat the last recorded macro
@@ -342,11 +311,6 @@ map Q @@
 au InsertEnter * set number
 au InsertLeave * set relativenumber
 
-" select inside opening bracket
-map <leader>´ vi{
-
-" indent when paste (http://vim.wikia.com/wiki/Format_pasted_text_automatically)
-" nnoremap p p=`]
 
 " }}}
 
@@ -368,15 +332,13 @@ augroup cline
   au! WinEnter * set cursorline
 augroup end
 
-" highlight SCM conflict markers
-match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
+" highlight SCM conflict markers (iis giving conflict with the TrailWhitespace)
+" match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
+" match ErrorMsg '\v^(\<|\=|\>){7}([^=].+)?$'
 
 " Shrink the current window to fit the number of lines in the buffer.  Useful
 " for those buffers that are only a few lines
 nmap <silent> ,sw :execute ":resize " . line('$')<cr>
-
-" easy close window
-" map <leader>wc <c-w>c
 
 " move splits around
 nn <leader>sl <c-w><s-h>
@@ -389,24 +351,6 @@ map <silent> <leader>vb :vertical :ball<cr>
 
 " open existing buffer to the right of the current one
 map <leader>so :ls<cr>:vert sp #
-
-" }}}
-
-
-" TABS {{{
-" ==================================================
-
-" all tabs to buffers
-map <silent> <leader>to :tabo<cr>
-
-" easy close tab
-map <silent> <leader>tc :tabclose<cr>
-
-" move tab
-map <silent> <leader>tm :tabmove<cr>
-
-" open all buffers in tabs
-map <silent> <leader>tb :tab :ball<cr>
 
 " }}}
 
@@ -432,6 +376,7 @@ nohls
 " hide search highlight
 nn <silent> <leader>0 :nohls<cr>
 nn <silent> <esc> :nohls<cr>
+" nn <silent> <tab> :nohls<cr>
 
 " don't move on *
 nn * *<c-o>
@@ -492,9 +437,6 @@ set numberwidth=6
 " always show status bar
 set laststatus=2
 
-" my status line (using airline now)
-"set statusline=\ #%n\ %f\ %m\ %r\ Line\ %l\ %P\ \ Column\ %c%=\ [%{&ff}]\ %{&ft}
-
 " higher command line
 set cmdheight=2
 
@@ -539,40 +481,15 @@ map <f5> :syntax sync fromstart<cr>:redraw!<cr><c-w>=
 
 set foldopen+=jump
 
-augroup ft_javascript
-  au!
-  au FileType javascript setl foldmethod=syntax
-augroup END
-
-augroup ft_html
-  au!
-  au FileType html setl foldmethod=syntax
-augroup END
-
-augroup ft_vim
-  au!
-  au FileType vim setl foldmethod=marker
-augroup END
-
-augroup ft_php
-  au!
-  au FileType php,xslt setl noexpandtab tabstop=2 shiftwidth=2 nolist
-augroup END
-
 " do not fold automatically
 set nofoldenable
-" set foldlevel=1
-" set foldenable
-" set foldlevel=1
 
 " from http://vim.wikia.com/wiki/Folding
 " toggle folds with space only if inside valid fold method, otherwise use default behaviour
 nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<cr>
+
 " create custom fold in visual mode when foldmethod=manual or marker
 vn <space> zf
-
-" fold everything except the current fold
-nnoremap <leader>z zMzvzz
 
 " }}}
 
@@ -631,17 +548,11 @@ nn <silent> <c-h> :bprev<cr>
 " AUTOCOMMANDS {{{
 " ==================================================
 
-" set this when coffeescript
-au! BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-
 " let vim create a template file based on the file type
 au! BufNewFile * silent! 0r $HOME/.vim/templates/template.%:e
 
 " .md extension is markdown
 au! BufNewFile,BufRead *.md set ft=markdown
-
-" vue.js
-au! BufNewFile,BufReadPost *.vue set ft=html
 
 " remove unwanted trailling spaces on save
 " au! BufWritePre * :%s/\s\+$//e
@@ -664,36 +575,9 @@ nmap <leader>vs :so $MYVIMRC<cr><bar>:echohl OK<bar>:echo ".vimrc sourced!"<bar>
 
 " plugins.vim
 nmap <leader>pe :split $MYPLUGINS<cr>
+
+" capitalize first letter
 nmap <leader>c mzb~`z
-com! W :w !sudo tee % > /dev/null
-
-" au! BufWritePre $MYPLUGINS :exe 'so ' . $MYPLUGINS<cr><bar>:echo "asd"<cr>
-
-" }}}
-
-
-" EDIT BASH/BASH_ALIASES {{{
-" ==================================================
-
-" edit my .bashrc
-"nmap <leader>be :split $MYBASHRC<cr>
-
-" edit my .aliases
-"nmap <leader>ae :split $MYALIASES<cr>
-
-" }}}
-
-
-" PROJECTS {{{
-" ==================================================
-
-" load projects configs
-let $MYPROJECTS=$HOME . '/.vim/projects.vim'
-if filereadable($MYPROJECTS)
-  exec 'so ' . $MYPROJECTS
-endif
-
-" }}}
 
 
 " SPELLING {{{
@@ -714,16 +598,16 @@ iab conts const
 iab udpate update
 iab tempaltes templates
 iab onlye only
-
-" }}}
-
-
-" VUNDLE MAPPINGS {{{
-" ==================================================
-
-map <leader>pi :PluginInstall<cr>
-map <leader>pc :PluginClean<cr>
-map <leader>pu :PluginUpdate<cr>
+iab wareohuse warehouse
+iab inventoryShpiment inventoryShipment
+iab cons const
+iab cosnt const
+iab witohut without
+iab reutrn return
+iab josn json
+iab metohd method
+iab weigth weight
+iab tyoe type
 
 " }}}
 
@@ -736,11 +620,6 @@ map <leader>- :ZoomOut<cr>
 map <leader>= :ZoomReset<cr>
 
 " }}}
-
-" ELM {{{
-" ==================================================
-
-let g:elm_format_autosave = 1
 
 
 " AIRLINE CONFIG {{{
@@ -761,6 +640,7 @@ let g:airline#extensions#tabline#fnamemod=':t'
 let g:gitgutter_all_on_focusgained = 0
 
 " }}}
+
 
 " SNIPPETS CONFIG {{{
 " ==================================================
@@ -797,26 +677,16 @@ map <leader>u :UndotreeToggle<cr>
 
 " }}}
 
-" VIM-JSON {{{
+
+" PRETTIER CONFIG {{{
 " ==================================================
 
-let g:vim_json_syntax_conceal = 0
+" let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
+let g:prettier#autoformat_config_present = 1
 
 " }}}
 
-" SYNTASTIC {{{
-" ==================================================
-
-" let g:syntastic_javascript_checkers = ['eslint']
-
-" }}}
-
-" JSX {{{
-" ==================================================
-
-let g:jsx_ext_required = 0
-
-" }}}
 
 " MISC STUFF {{{
 " ==================================================
@@ -833,15 +703,14 @@ function! s:Sum(number)
   return a:number
 endfunction
 
-" highlight trailing whitespaces
-highlight WhitespaceEOL ctermbg=Red guibg=#F92672
-match WhitespaceEOL /\s\+$/
-
 " save last closed buffer
 au! BufDelete * let last_buffer = expand('%:p')
 map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
 
 let g:go_fmt_command = "goimports"
+let g:go_imports_mode = "goimports"
+let g:go_auto_type_info = 1
+let g:go_updatetime = 400
 
 function! BufList()
   let bufcount = bufnr("$")
@@ -865,18 +734,43 @@ function! BufList()
   endif
 endfunction
 
+" list all buffers
+nmap <c-o> :call BufList()<cr>
 
-highlight link markdownH1 PreProc
-highlight link markdownH2 PreProc
-highlight link markdownH3 PreProc
-highlight link markdownLink Character
-highlight link markdownBold String
-highlight link markdownItalic Statement
-highlight link markdownCode Delimiter
-highlight link markdownCodeBlock Delimiter
-highlight link markdownListMarker Delimiter
 
-highlight htmlArg gui=italic
-highlight htmlArg cterm=italic
-highlight Comment gui=italic
-highlight Comment cterm=italic
+" Highlight a column in csv text.
+" :Csv 1    " highlight first column
+" :Csv 12   " highlight twelfth column
+" :Csv 0    " switch off highlight
+function! CSVH(colnr, sep = ';')
+  let s = a:sep
+  if a:colnr > 1
+    let n = a:colnr - 1
+    echom s
+    execute 'match Keyword /^\([^'.s.']*'.s.'\)\{'.n.'}\zs[^'.s.']*/'
+    execute 'normal! 0'.n.'f,'
+  elseif a:colnr == 1
+    execute 'match Keyword /^[^'.s.']*/'
+    normal! 0
+  else
+    match
+  endif
+endfunction
+command! -nargs=* Csv :call CSVH(<f-args>)
+
+
+" " Like gJ, but always remove spaces
+" fun! JoinSpaceless()
+"     execute 'normal gJ'
+"
+"     " Character under cursor is whitespace?
+"     if matchstr(getline('.'), '\%' . col('.') . 'c.') =~ '\s'
+"         " When remove it!
+"         execute 'normal dw'
+"     endif
+" endfun
+"
+" " Map it to a key
+" nnoremap <Leader>J :call JoinSpaceless()<CR>
+
+" }}}
