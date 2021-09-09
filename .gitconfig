@@ -7,7 +7,7 @@
 
 [core]
   excludesfile = ~/.gitignore
-  editor = mvim -f
+  editor = vim -f
   quotepath = false
   precomposeunicode = true
   autocrlf = input
