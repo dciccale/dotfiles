@@ -1,0 +1,4 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "yaml", "javascript", "typescript", "vue"],
+  "prettier.disableLanguages": []
+}
