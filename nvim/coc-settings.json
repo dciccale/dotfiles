@@ -1,4 +1,23 @@
+// vim: filetype=jsonc
 {
-  "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "yaml", "javascript", "typescript", "vue"],
-  "prettier.disableLanguages": []
+  "eslint.filetypes": [
+    "typescript",
+    "javascript",
+    "typescriptreact",
+    "javascriptreact"
+  ],
+  "eslint.run": "onSave",
+  "eslint.autoFixOnSave": true,
+  "prettier.eslintIntegration": true,
+  "prettier.disableLanguages": [],
+  "prettier.bracketSameLine": true,
+  "coc.preferences.formatOnSave": true,
+  "cSpell.enabled": false,
+  "python.formatting.provider": "autopep8",
+  "json.schemas": [
+    {
+      "fileMatch": ["manifest.json"],
+      "url": "https://json.schemastore.org/chrome-manifest.json"
+    }
+  ]
 }

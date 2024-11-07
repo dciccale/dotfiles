@@ -13,9 +13,13 @@ exec 'so ' . $MYPLUGINS
 " EDITION {{{
 " ==================================================
 
+set guicursor=""
 set background=dark
 " color space
+color dracula
+" colorscheme tokyonight
 " color lucius
+" color github_*
 
 " basic edition stuff on
 filetype on
@@ -187,7 +191,7 @@ map <silent> <leader>q :q<cr>
 nmap <leader>a ggVG
 
 " select full javascript function
-" required to be at the same line of the openin symbol (need to improve this)
+" required to be at the same line of the opening symbol (need to improve this)
 nmap <leader>sf V$%
 
 " force save of files with root permission
@@ -262,8 +266,11 @@ map <leader>rr mz<bar>:retab!<bar>:normal gg=G<cr>`z
 " just retab and save
 map <leader>rt :retab!<bar>:w<cr>
 
+vn J :m '>+1<cr>gv=gv
+vn K :m '<-2<cr>gv=gv
+
 " disable K in normal mode as I type this often and don't use it
-nn K <nop>
+" nn K <nop>
 
 " open current url with default browser
 function! s:Open()
@@ -308,7 +315,7 @@ augroup cline
   au! WinEnter * set cursorline
 augroup end
 
-" highlight SCM conflict markers (iis giving conflict with the TrailWhitespace)
+" highlight SCM conflict markers (is giving conflict with the TrailWhitespace)
 " match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\*\)\?$'
 " match ErrorMsg '\v^(\<|\=|\>){7}([^=].+)?$'
 
@@ -432,7 +439,14 @@ set title
 set autochdir
 
 " no backup/swap files
-set nobackup noswapfile
+set nobackup nowritebackup noswapfile
+
+" always show the signcolumn, otherwise it would shift the text each time diagnostics appear/become resolved.
+set signcolumn=yes
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=80
 
 " shorten vim messages
 " see :h shortmess for the breakdown of what this changes
@@ -624,7 +638,7 @@ let g:gitgutter_all_on_focusgained = 0
 " SNIPPETS CONFIG {{{
 " ==================================================
 
-let g:SuperTabDefaultCompletionType = "<c-n>"
+" let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " edit desired snipMate snippets for the specified file type
 function! s:EditSnippet()
@@ -666,6 +680,17 @@ map <leader>u :UndotreeToggle<cr>
 " let g:prettier#autoformat = 1
 " let g:prettier#autoformat_require_pragma = 0
 " let g:prettier#autoformat_config_present = 1
+
+" }}}
+
+
+" COC-PYRIGHT CONFIG {{{
+" ==================================================
+
+aug python
+  au!
+  au BufWrite *.py call CocAction('format')
+aug END
 
 " }}}
 
@@ -751,19 +776,108 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 " coc-snippets
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ CheckBackSpace() ? "\<TAB>" :
-      \ coc#refresh()
+" inoremap <silent><expr> <TAB>
+"       \ coc#pum#visible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ CheckBackSpace() ? "\<TAB>" :
+"       \ coc#refresh()
+"
+" function! CheckBackSpace() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-function! CheckBackSpace() abort
+" let g:coc_snippet_next = '<tab>'
+
+
+
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<tab>'
+
+
 
 :hi! link CocFloating CocHintFloat
 
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" if exists('*complete_info')
+"   inoremap <silent><expr> <cr> complete_info(['selected'])['selected'] != -1 ? "\<C-y>" : "\<C-g>u\<CR>"
+" endif
+
+" Use <Tab> and <S-Tab> to navigate the completion list:
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
 " }}}
+
+
+" disable syntax highlighting in big files
+"function DisableSyntaxTreesitter()
+"    echo("Big file, disabling syntax, treesitter and folding")
+"    if exists(':TSBufDisable')
+"        exec 'TSBufDisable autotag'
+"        exec 'TSBufDisable highlight'
+"        " etc...
+"    endif
+"
+"    set foldmethod=manual
+"    syntax clear
+"    syntax off    " hmmm, which one to use?
+"    filetype off
+"    set noundofile
+"    set noswapfile
+"    set noloadplugins
+"endfunction
+"
+"augroup BigFileDisable
+"    autocmd!
+"    autocmd BufReadPre,FileReadPre * if getfsize(expand("%")) > 4300 | exec DisableSyntaxTreesitter() | endif
+"augroup END
+
+let g:coc_global_extensions = [ 'coc-eslint', 'coc-prettier']
+
+" Go lang
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
