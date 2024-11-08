@@ -1,6 +1,6 @@
 [user]
-  name = Denis Ciccale
-  email = dciccale@gmail.com
+  name = dciccale
+  email = 539546+dciccale@users.noreply.github.com
 
 [github]
   user = dciccale
@@ -36,6 +36,7 @@
   remote = cyan
 
 [push]
+  autoSetupRemote = true
   default = current
 
 [pull]
@@ -108,6 +109,7 @@
   # commit with message
   cm = commit -m
   cam = commit -am
+  cmn = commit --no-verify -m
 
   # commit everything
   caam = !git add . && git commit -am
@@ -245,7 +247,7 @@
   # ----------------
 
   # set my personal username and email
-  dciccale = !git config user.name dciccale && git config user.email dciccale@gmail.com
+  dciccale = !git config user.name dciccale && git config user.email 539546+dciccale@users.noreply.github.com
 
   # }}}
 
@@ -267,3 +269,16 @@
   insteadOf = "gd:"
 
 # }}}
+[init]
+  defaultBranch = main
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
+[mergetool "sourcetree"]
+  cmd = /Users/denis/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true
+[filter "lfs"]
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
