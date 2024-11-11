@@ -1,0 +1,31 @@
+alias g=git
+alias k=kubectl
+alias kx=kubectx
+alias kn=kubens
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ex=exit
+alias reload=". ~/.zshrc"
+alias cl=clear
+alias python=python3
+# cd into chrome extensions directory
+alias ch="cd ~/Library/Application\ Support/Google/Chrome/Default/Extensions/"
+alias c='pygmentize -O style=material -g'
+
+pr() {
+  local _open=$(if [[ `uname -s` == "Linux" ]]; then echo "xdg-open"; else echo "open"; fi)
+  local repo=`git config --get remote.origin.url | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/"`
+  local branch=`git rev-parse --abbrev-ref HEAD`
+  $_open https://github.com/$repo/pull/new/$branch
+}
+
+################################################################################
+# IP addresses
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en1"
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+
+# alias apps='cd ~/Library/Developer/CoreSimulator/Devices && find . -iname "*.app"'
+# alias iosid="xcrun simctl list | egrep '(Booted)'"
