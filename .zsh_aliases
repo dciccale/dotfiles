@@ -1,15 +1,21 @@
-alias g=git
-alias k=kubectl
-alias kx=kubectx
-alias kn=kubens
+################################################################################
+# Easier navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ex=exit
+
+
+################################################################################
+# Misc
 alias reload=". ~/.zshrc"
 alias cl=clear
 alias python=python3
+alias g=git
+alias lsd="ls -d */"
+alias ls="ls -G"
+
 # cd into chrome extensions directory
 alias ch="cd ~/Library/Application\ Support/Google/Chrome/Default/Extensions/"
 alias c='pygmentize -O style=material -g'
@@ -29,3 +35,26 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
 # alias apps='cd ~/Library/Developer/CoreSimulator/Devices && find . -iname "*.app"'
 # alias iosid="xcrun simctl list | egrep '(Booted)'"
+
+################################################################################
+# Utilities
+
+# Print http status every n seconds
+# n defaults to 1s
+# usage:
+# http-ping google.com .5 (500 milliseconds)
+# http-ping google.com 2 (2 seconds)
+http-ping() {
+  n=1 && (($#>1)) && n=$2
+  while true
+  do
+    curl -o /dev/null --silent --head --write-out '%{http_code}\n' $1
+    sleep ${n}
+  done
+}
+
+# Usage: weather [location]
+# Example: weather jerez
+weather() {
+  curl -4 wttr.in/$1
+}

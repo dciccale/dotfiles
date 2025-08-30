@@ -9,6 +9,7 @@
   "eslint.run": "onSave",
   "eslint.autoFixOnSave": true,
   "prettier.eslintIntegration": true,
+  "tslint.enable": false,
   "prettier.disableLanguages": [],
   "prettier.bracketSameLine": true,
   "coc.preferences.formatOnSave": true,
@@ -19,5 +20,9 @@
       "fileMatch": ["manifest.json"],
       "url": "https://json.schemastore.org/chrome-manifest.json"
     }
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "snippets.ultisnips.pythonPrompt": false
 }

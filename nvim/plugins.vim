@@ -60,6 +60,7 @@ Plug 'mbbill/undotree'
 
 " commenting
 Plug 'tomtom/tcomment_vim'
+let g:tcomment#filetype#guess = 1
 
 " SnipMate (disabled for nvim)
 " Plug 'MarcWeber/vim-addon-mw-utils'
@@ -92,6 +93,10 @@ Plug 'vim-scripts/Rename2'
 " Plug 'prettier/vim-prettier', {
 "   \ 'do': 'npm install',
 "   \ 'for': ['javascript', 'typescript', 'css', 'scss', 'json', 'markdown', 'vue', 'yaml', 'html'] }
+
+let g:polyglot_disabled = ['graphql']
+Plug 'jparise/vim-graphql'
+Plug 'sheerun/vim-polyglot'
 
 " }}}
 

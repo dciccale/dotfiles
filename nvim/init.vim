@@ -15,8 +15,8 @@ exec 'so ' . $MYPLUGINS
 
 set guicursor=""
 set background=dark
-" color space
-color dracula
+color space
+" color dracula
 " colorscheme tokyonight
 " color lucius
 " color github_*
@@ -710,9 +710,51 @@ function! s:Sum(number)
   return a:number
 endfunction
 
+
+" LAST BUFF PLUGIN {{{
+" ==================================================
+
 " save last closed buffer
-au! BufDelete * let last_buffer = expand('%:p')
-map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
+" au! BufDelete * let last_buffer = expand('%:p')
+" map <silent> <leader>bl :exec ':e ' . last_buffer<cr>
+
+" Store last closed buffers in a list
+let g:last_buffers = []
+
+" Function to track buffer deletions
+function! RememberLastBuffer()
+    let l:bufname = expand('%:p')
+    if l:bufname != '' && index(g:last_buffers, l:bufname) == -1
+        call insert(g:last_buffers, l:bufname, 0)
+        if len(g:last_buffers) > 5
+            call remove(g:last_buffers, -1)
+        endif
+    endif
+endfunction
+
+" Function to reopen the last closed buffer
+function! ReopenLastBuffer()
+    if !empty(g:last_buffers)
+        let l:last = remove(g:last_buffers, 0)
+        execute 'edit ' . fnameescape(l:last)
+    else
+        echo "No recent buffers to reopen"
+    endif
+endfunction
+
+" Autocommand to remember closed buffers
+augroup LastBufferTracking
+    autocmd!
+    autocmd BufDelete * call RememberLastBuffer()
+augroup END
+
+" Mapping to open the last closed buffer
+nnoremap <silent> <leader>bl :call ReopenLastBuffer()<CR>
+" }}}
+
+
+
+
 
 let g:go_fmt_command = "goimports"
 let g:go_imports_mode = "goimports"
@@ -877,7 +919,7 @@ nmap <leader>rn <Plug>(coc-rename)
 "    autocmd BufReadPre,FileReadPre * if getfsize(expand("%")) > 4300 | exec DisableSyntaxTreesitter() | endif
 "augroup END
 
-let g:coc_global_extensions = [ 'coc-eslint', 'coc-prettier']
+" let g:coc_global_extensions = [ 'coc-eslint', 'coc-prettier']
 
 " Go lang
 autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
