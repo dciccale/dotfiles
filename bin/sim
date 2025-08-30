@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# Usage: sim [command] [args...]
+# Wrapper for xcrun simctl
+
+COMMAND=$1
+shift
+
+case "$COMMAND" in
+  close|shutdown)
+    xcrun simctl shutdown booted
+    ;;
+  run|boot)
+    if [ -z "$1" ]; then
+      echo "Usage: sim run \"Device Name\""
+      exit 1
+    fi
+    xcrun simctl boot "$1"
+    ;;
+  list)
+    xcrun simctl list devices
+    ;;
+  devices)
+    if [ -z "$1" ]; then
+      xcrun simctl list devicetypes
+    else
+      xcrun simctl list devicetypes | grep "$1"
+    fi
+    ;;
+  runtimes)
+    if [ -z "$1" ]; then
+      xcrun simctl list runtimes
+    else
+      xcrun simctl list runtimes | grep "$1"
+    fi
+    ;;
+  create)
+    if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+      echo "Usage: sim create \"Device Name\" \"Device Type\" \"Runtime\""
+      echo "Example: sim create \"iPhone 15 Pro (iOS 17.5)\" \"iPhone 15 Pro\" \"iOS 17.5\""
+      exit 1
+    fi
+    DEVICE_NAME="$1"
+    DEVICE_TYPE="$2"
+    RUNTIME="$3"
+
+    # Get device type identifier
+    DEVICE_TYPE_ID=$(xcrun simctl list devicetypes | grep "$DEVICE_TYPE" | head -n 1 | sed 's/.*(\(.*\)).*/\1/')
+    if [ -z "$DEVICE_TYPE_ID" ]; then
+      echo "Error: Device type '$DEVICE_TYPE' not found"
+      exit 1
+    fi
+
+    # Get runtime identifier
+    echo "Available runtimes:"
+    xcrun simctl list runtimes
+    echo "Looking for runtime matching: $RUNTIME"
+    RUNTIME_LINE=$(xcrun simctl list runtimes | grep "$RUNTIME" | head -n 1)
+    echo "Found runtime line: $RUNTIME_LINE"
+    RUNTIME_ID=$(xcrun simctl list runtimes | grep "$RUNTIME" | sed -E 's/.* - (com\.apple\.CoreSimulator\.SimRuntime\.[^[:space:]]+).*/\1/' | head -n1)
+    echo "Extracted runtime ID: $RUNTIME_ID"
+
+    if [ -z "$RUNTIME_ID" ]; then
+      echo "Error: Runtime '$RUNTIME' not found"
+      exit 1
+    fi
+
+    xcrun simctl create "$DEVICE_NAME" "$DEVICE_TYPE_ID" "$RUNTIME_ID"
+    ;;
+  open|launch)
+    open -a Simulator
+    ;;
+  erase)
+    if [ -z "$1" ]; then
+      echo "Usage: sim erase \"Device Name\""
+      exit 1
+    fi
+    xcrun simctl erase "$1"
+    ;;
+  help|-h|--help)
+    echo "Simulator CLI wrapper for xcrun simctl"
+    echo "Usage:"
+    echo "  sim run \"Device Name\"     # Boot device"
+    echo "  sim close                  # Shutdown booted device"
+    echo "  sim list                   # List available devices"
+    echo "  sim devices [filter]       # List device types (optionally filtered)"
+    echo "  sim runtimes [filter]      # List runtimes (optionally filtered)"
+    echo "  sim create \"Name\" \"Type\" \"Runtime\"  # Create new simulator"
+    echo "  sim erase \"Device Name\"    # Erase a device"
+    echo "  sim open                   # Open Simulator app"
+    ;;
+  *)
+    echo "Unknown command: $COMMAND"
+    echo "Use 'sim help' to see available commands."
+    exit 1
+    ;;
+esac
