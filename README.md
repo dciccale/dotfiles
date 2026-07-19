@@ -1,41 +1,47 @@
 # dotfiles
 
-Here are some of my dotfile configurations for git and vim.
+Personal macOS shell, Git, Neovim, Homebrew, and utility configuration.
 
 ## Installation
 
-Drop these dotfiles in your home directory just by doing:
+Clone the repository into the projects directory:
 
 ```bash
-$ git clone https://github.com/dciccale/dotfiles.git ~/
+git clone git@github.com:dciccale/dotfiles.git ~/git/dotfiles
 ```
 
-## Vim plugins installation
-
-1 - Install Vundle for plugin management:
+Back up any existing configuration first, then link the tracked files:
 
 ```bash
-$ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+ln -s ~/git/dotfiles/.gitconfig ~/.gitconfig
+ln -s ~/git/dotfiles/.zimrc ~/.zimrc
+ln -s ~/git/dotfiles/.zsh_aliases ~/.zsh_aliases
+ln -s ~/git/dotfiles/.zshrc ~/.zshrc
+ln -s ~/git/dotfiles/Brewfile ~/Brewfile
+
+mkdir -p ~/.config ~/bin
+ln -s ~/git/dotfiles/nvim ~/.config/nvim
+ln -s ~/git/dotfiles/bin/sim ~/bin/sim
 ```
 
+Install Homebrew dependencies with:
 
-2 - Open vim and run the following command to install the plugins used:
-
-```
-:PlugInstall
-```
-
-Or if using my mappings just type `,bi`.
-
-### Plugin updates
-
-Each time you want to update any plugin, vundle does it for you, just run this command in vim:
-
-```
-:PlugUpdate
+```bash
+brew bundle --file ~/Brewfile
 ```
 
-Or if keeping my mappings just do `,bu`.
+## Neovim plugins
 
-cheers.
+Neovim plugins are managed with vim-plug. Install vim-plug and then install the
+declared plugins, including Conform:
 
+```bash
+curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+nvim '+PlugInstall --sync' +qa
+```
+
+CoC extensions are declared in `nvim/init.vim`. Conform owns format-on-save;
+CoC is used for completion and diagnostics.
+
+Update Neovim plugins with `:PlugUpdate` or the `,bu` mapping.
