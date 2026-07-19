@@ -2,10 +2,10 @@
 " ==================================================
 
 " my plugins config file path
-let $MYPLUGINS='~/.config/nvim/plugins.vim'
+let $MYPLUGINS = stdpath('config') . '/plugins.vim'
 
-" load plugins managed by vundle
-exec 'so ' . $MYPLUGINS
+" load plugins managed by vim-plug
+execute 'source' fnameescape($MYPLUGINS)
 
 " }}}
 
@@ -15,8 +15,8 @@ exec 'so ' . $MYPLUGINS
 
 set guicursor=""
 set background=dark
-color space
-" color dracula
+" color space
+color dracula
 " colorscheme tokyonight
 " color lucius
 " color github_*
@@ -687,10 +687,8 @@ map <leader>u :UndotreeToggle<cr>
 " COC-PYRIGHT CONFIG {{{
 " ==================================================
 
-aug python
-  au!
-  au BufWrite *.py call CocAction('format')
-aug END
+" Remove conflicting format-on-save for Python via Coc.
+" Conform or other formatters can handle formatting instead.
 
 " }}}
 
@@ -919,7 +917,9 @@ nmap <leader>rn <Plug>(coc-rename)
 "    autocmd BufReadPre,FileReadPre * if getfsize(expand("%")) > 4300 | exec DisableSyntaxTreesitter() | endif
 "augroup END
 
-" let g:coc_global_extensions = [ 'coc-eslint', 'coc-prettier']
+let g:coc_global_extensions = ['coc-biome', 'coc-eslint', 'coc-tsserver']
 
 " Go lang
 autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+
+lua require('conform_setup')

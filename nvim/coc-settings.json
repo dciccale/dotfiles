@@ -1,28 +1,32 @@
-// vim: filetype=jsonc
 {
+  "biome.enable": true,
+  "biome.requireConfiguration": true,
+
+  // ESLint provides diagnostics and explicit fixes; Conform owns format-on-save.
+  "eslint.enable": true,
+  "eslint.format.enable": true,
   "eslint.filetypes": [
-    "typescript",
     "javascript",
+    "javascriptreact",
+    "typescript",
     "typescriptreact",
-    "javascriptreact"
+    "json",
+    "jsonc"
   ],
-  "eslint.run": "onSave",
-  "eslint.autoFixOnSave": true,
-  "prettier.eslintIntegration": true,
-  "tslint.enable": false,
-  "prettier.disableLanguages": [],
-  "prettier.bracketSameLine": true,
-  "coc.preferences.formatOnSave": true,
-  "cSpell.enabled": false,
-  "python.formatting.provider": "autopep8",
-  "json.schemas": [
-    {
-      "fileMatch": ["manifest.json"],
-      "url": "https://json.schemastore.org/chrome-manifest.json"
-    }
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc"
   ],
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "snippets.ultisnips.pythonPrompt": false
+
+  // JSON fallback when ESLint/Biome aren’t active
+  "json.format.enable": true,
+
+  "typescript.format.enable": true,
+  "javascript.format.enable": true,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true
 }

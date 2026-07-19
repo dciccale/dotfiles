@@ -1,2 +1,5 @@
 *~
 .DS_Store
+nvim/autoload/plug.vim
+nvim/coc-settings.json.bak-*
+nvim/plugins/

@@ -1,4 +1,4 @@
-call plug#begin('~/.config/nvim/plugins')
+call plug#begin(stdpath('config') . '/plugins')
 
 au! BufWritePost plugins.vim so %
 
@@ -16,10 +16,13 @@ Plug 'dracula/vim'
 " ==================================================
 
 " Copilot
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
 
 " CoC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Formatting
+Plug 'stevearc/conform.nvim'
 
 " minimap
 Plug 'wfxr/minimap.vim'
@@ -62,23 +65,8 @@ Plug 'mbbill/undotree'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment#filetype#guess = 1
 
-" SnipMate (disabled for nvim)
-" Plug 'MarcWeber/vim-addon-mw-utils'
-" Plug 'tomtom/tlib_vim'
-" Plug 'garbas/vim-snipmate'
-" let g:snipMate = { 'snippet_version' : 1 }
-
 " Easy rename current file
 Plug 'vim-scripts/Rename2'
-
-" Plug 'gpanders/editorconfig.nvim'
-
-" Plug 'stephpy/vim-php-cs-fixer'
-" let g:php_cs_fixer_php_path = "docker-compose run --rm php"
-" let g:php_cs_fixer_path = "/Users/denis/git/kiwin/kiwinio/src/vendor/bin/php-cs-fixer"
-
-" YCM
-" Plug 'Valloric/YouCompleteMe'
 
 " }}}
 
