@@ -93,7 +93,11 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 # Initialize modules
 # ------------------
 
-ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# Keep Zim anchored to the real home directory so temporary ZDOTDIR shells
+# don't regenerate ~/.zim/init.zsh with transient absolute paths.
+ZIM_HOME=${HOME}/.zim
+ZIM_CONFIG_FILE=${ZIM_CONFIG_FILE:-${HOME}/.zimrc}
+if [[ -z ${ZIM_SKIP_INIT-} ]]; then
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   if (( ${+commands[curl]} )); then
@@ -105,11 +109,12 @@ if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   fi
 fi
 # Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE} ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init
 fi
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
+fi
 
 # ------------------------------
 # Post-init module configuration
@@ -128,89 +133,93 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-eval "$(starship init zsh)"
+typeset -U path PATH
+path=(/opt/homebrew/bin "$HOME/bin" $path)
 
-# The next line updates PATH for the Google Cloud SDK.
-# if [ -f '/Users/denis/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/denis/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-# if [ -f '/Users/denis/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/denis/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-eval "$(pyenv init -)"
+if [[ -o interactive ]] && (( ${+commands[starship]} )); then
+  eval "$(starship init zsh)"
+fi
 
 # load aliases
 if [ -f ~/.zsh_aliases ]; then . ~/.zsh_aliases; fi
 
-# PATH stuff
-export PATH="/usr/local/sbin:$PATH"
-export PATH="$HOME/bin:$PATH"
+export ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+if [ -d "$ANDROID_HOME" ]; then
+  path+=("$ANDROID_HOME/emulator" "$ANDROID_HOME/platform-tools")
+fi
 
-permcp() {
-  chmod $( stat -f '%A' "$1" ) "${@:2}"
-}
-export PATH="/usr/local/opt/mongodb-community@4.4/bin:$PATH"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999999'   # safe bright gray
+
+export NVM_DIR="$HOME/.nvm"
+# Fast-path Node: add default nvm version bin to PATH without sourcing nvm.sh.
+if [ -r "$NVM_DIR/alias/default" ]; then
+  NVM_DEFAULT_VERSION="$(<"$NVM_DIR/alias/default")"
+
+  # Resolve alias values like "node" / "lts/*" / custom aliases to a concrete version.
+  case "$NVM_DEFAULT_VERSION" in
+    node|stable)
+      NVM_DEFAULT_VERSION="$(ls -1 "$NVM_DIR/versions/node" 2>/dev/null | sort -V | tail -n 1)"
+      ;;
+    lts/*)
+      NVM_LTS_ALIAS="${NVM_DEFAULT_VERSION#lts/}"
+      if [ -r "$NVM_DIR/alias/lts/$NVM_LTS_ALIAS" ]; then
+        NVM_DEFAULT_VERSION="$(<"$NVM_DIR/alias/lts/$NVM_LTS_ALIAS")"
+      fi
+      unset NVM_LTS_ALIAS
+      ;;
+    *)
+      if [ -r "$NVM_DIR/alias/$NVM_DEFAULT_VERSION" ]; then
+        NVM_DEFAULT_VERSION="$(<"$NVM_DIR/alias/$NVM_DEFAULT_VERSION")"
+      fi
+      ;;
+  esac
+
+  if [ -n "$NVM_DEFAULT_VERSION" ] && [ -d "$NVM_DIR/versions/node/$NVM_DEFAULT_VERSION/bin" ]; then
+    path=("$NVM_DIR/versions/node/$NVM_DEFAULT_VERSION/bin" $path)
+  fi
+  unset NVM_DEFAULT_VERSION
+fi
+
+# Lazy-load nvm only when explicitly used.
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  lazy_load_nvm() {
+    unset -f lazy_load_nvm nvm
+    \. "$NVM_DIR/nvm.sh"
+  }
+  nvm() {
+    lazy_load_nvm
+    nvm "$@"
+  }
+fi
+
+# rbenv fast path: add shims/bin; defer full init until rbenv command is used.
+export RBENV_ROOT="${RBENV_ROOT:-$HOME/.rbenv}"
+if [ -x "$RBENV_ROOT/bin/rbenv" ]; then
+  path=("$RBENV_ROOT/bin" "$RBENV_ROOT/shims" $path)
+  lazy_load_rbenv() {
+    unset -f lazy_load_rbenv rbenv
+    eval "$(command rbenv init - zsh)"
+  }
+  rbenv() {
+    lazy_load_rbenv
+    rbenv "$@"
+  }
+fi
+
+if JAVA_HOME_17=$(/usr/libexec/java_home -v 17 2>/dev/null); then
+  export JAVA_HOME="$JAVA_HOME_17"
+  path=("$JAVA_HOME/bin" $path)
+fi
+unset JAVA_HOME_17
+path=(/opt/homebrew/sbin $path)
 
 # bun completions
-[ -s "/Users/denis/.bun/_bun" ] && source "/Users/denis/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-alias spell=spellCheck $1
-function spellCheck() {
-   for file in "$@"
-   do
-      let count=`aspell -a < $file | egrep "^\&" | awk '{print $2}' | sort -u | wc -l | awk '{print $1}'`
-      if [ $count -eq 0 ]; then
-         printf "\n$No spelling errors on $file\n"
-      fi
-      if [ $count -gt 0 ]; then
-         printf "\n$count spelling error(s) on $file\n"
-         echo ======================================================
-         aspell -a < $file  | egrep "^\&" | awk '{print $2}' | sort -u
-      fi
-   done
-}
-
-export PATH="/usr/local/opt/icu4c/bin:$PATH"
-export PATH="/usr/local/opt/icu4c/sbin:$PATH"
-export LDFLAGS="-L/usr/local/opt/icu4c/lib"
-export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
-export LC_ALL=en_US.UTF-8
-
-if [ -d "/usr/local/opt/ruby/bin" ]; then
-  export PATH=/usr/local/opt/ruby/bin:$PATH
-  export PATH=`gem environment gemdir`/bin:$PATH
-fi
-
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-export PATH=$JAVA_HOME/bin:$PATH
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-export LD_LIBRARY_PATH=/Users/denis/.nvm/versions/node/v16.13.0/lib/node_modules/editly/node_modules/canvas/build/Release
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-# flutter
-export PATH="$PATH:$HOME/dev/flutter/bin"
-
-# pnpm
-export PNPM_HOME="/Users/denis/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-export NPM_CONFIG_USERCONFIG=~/.npmrc
+[ -d "$BUN_INSTALL/bin" ] && path=("$BUN_INSTALL/bin" $path)
+export GOPATH="${GOPATH:-$HOME/go}"
+[ -d "$GOPATH/bin" ] && path=("$GOPATH/bin" $path)
+[ -d "$HOME/.local/bin" ] && path=("$HOME/.local/bin" $path)
+export PATH

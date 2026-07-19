@@ -1,30 +1,37 @@
-################################################################################
-# Easier navigation
+alias g=git
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ex=exit
-
-
-################################################################################
-# Misc
-alias reload=". ~/.zshrc"
+unalias reload 2>/dev/null
+reload() {
+  unfunction compinit 2>/dev/null
+  unset _comps _services _patcomps 2>/dev/null
+  source ~/.zshrc
+}
 alias cl=clear
 alias python=python3
-alias g=git
-alias lsd="ls -d */"
-alias ls="ls -G"
-
 # cd into chrome extensions directory
 alias ch="cd ~/Library/Application\ Support/Google/Chrome/Default/Extensions/"
 alias c='pygmentize -O style=material -g'
 
 pr() {
-  local _open=$(if [[ `uname -s` == "Linux" ]]; then echo "xdg-open"; else echo "open"; fi)
-  local repo=`git config --get remote.origin.url | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/"`
-  local branch=`git rev-parse --abbrev-ref HEAD`
-  $_open https://github.com/$repo/pull/new/$branch
+  local _open repo branch
+  _open=$(if [[ "$(uname -s)" == "Linux" ]]; then echo "xdg-open"; else echo "open"; fi)
+  repo="$(git config --get remote.origin.url | sed -E 's#.*github.com[:/](.*)\.git#\1#')"
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  "$_open" "https://github.com/$repo/pull/new/$branch"
+}
+
+mr() {
+  local _open
+  _open=$(if [[ "$(uname -s)" == "Linux" ]]; then echo "xdg-open"; else echo "open"; fi)
+  local repo branch encoded_branch
+  repo="$(git config --get remote.origin.url | sed -E 's#.*gitlab.com[:/](.*)\.git#\1#')"
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  encoded_branch="${branch//\//%2F}"
+  "$_open" "https://gitlab.com/$repo/-/merge_requests/new?merge_request[source_branch]=$encoded_branch"
 }
 
 ################################################################################
@@ -36,25 +43,11 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 # alias apps='cd ~/Library/Developer/CoreSimulator/Devices && find . -iname "*.app"'
 # alias iosid="xcrun simctl list | egrep '(Booted)'"
 
-################################################################################
-# Utilities
+# Scaffold a new project from turbotemplate
+alias turbotemplate="$HOME/git/turbotemplate/bin/create.sh"
 
-# Print http status every n seconds
-# n defaults to 1s
-# usage:
-# http-ping google.com .5 (500 milliseconds)
-# http-ping google.com 2 (2 seconds)
-http-ping() {
-  n=1 && (($#>1)) && n=$2
-  while true
-  do
-    curl -o /dev/null --silent --head --write-out '%{http_code}\n' $1
-    sleep ${n}
-  done
-}
+# Lock a directory (prevent deletion/move/rename)
+alias lock='sudo chflags uchg'
 
-# Usage: weather [location]
-# Example: weather jerez
-weather() {
-  curl -4 wttr.in/$1
-}
+# Unlock a directory (allow deletion/move/rename again)
+alias unlock='sudo chflags nouchg'
